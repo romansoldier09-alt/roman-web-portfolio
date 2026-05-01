@@ -369,6 +369,7 @@ footer .accent{color:var(--accent)}
 .form-group select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%2393A4B5' d='M6 8L1 3h10z'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 1rem center}
 .form-group textarea{resize:vertical;min-height:100px}
 .form-submit{width:100%;justify-content:center;margin-top:0.5rem}
+.form-helper{font-size:0.8rem;color:var(--muted2);margin:0.5rem 0;text-align:left}
 .form-success{text-align:center;padding:3rem 2rem;background:var(--surface);border:1px solid var(--accent);border-radius:4px;max-width:640px;margin:0 auto}
 .success-icon{width:60px;height:60px;background:var(--accent);color:var(--bg);font-size:1.5rem;font-weight:800;display:flex;align-items:center;justify-content:center;border-radius:50%;margin:0 auto 1.5rem}
 .form-success h3{font-family:var(--font-display);font-size:1.5rem;margin-bottom:0.5rem}
@@ -387,4 +388,5 @@ footer .accent{color:var(--accent)}
 @media (max-width: 900px) {
   .mobile-sticky-cta{display:block}
   #contact{padding-bottom:5rem}
+  .lead-form{padding-bottom:2rem}
 }
