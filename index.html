@@ -46,7 +46,7 @@
     <li><a href="#work" data-en="Work" data-es="Proyectos">Work</a></li>
     <li><a href="#process" data-en="Process" data-es="Proceso">Process</a></li>
     <li><a href="#why" data-en="Why Me" data-es="Por qué yo">Why Me</a></li>
-    <li><a href="#contact" class="nav-cta" data-en="Start a Website" data-es="Crear sitio">Start a Website</a></li>
+    <li><a href="#contact" class="nav-cta" data-en="Get a Free Demo" data-es="Obtener Demo">Get a Free Demo</a></li>
     <li><button class="lang-toggle" type="button" aria-label="Switch language" aria-pressed="false"><span class="lang-current">EN</span> <span>/</span> ES</button></li>
   </ul>
 </nav>
@@ -67,9 +67,12 @@
       <span data-en="I help small businesses look professional online with simple, mobile-friendly websites that make it easy for customers to call, message, or request a free estimate." data-es="Ayudo a negocios locales a verse profesionales en línea con sitios web simples y móviles que facilitan que los clientes llamen, manden mensaje o soliciten una cotización gratis.">I help small businesses look professional online with simple, mobile-friendly websites that make it easy for customers to call, message, or request a free estimate.</span>
     </p>
     <div class="hero-actions">
-      <a href="#work" class="btn btn-primary" data-en="→ See Examples" data-es="→ Ver ejemplos">→ See Examples</a>
-      <a href="#contact" class="btn btn-outline" data-en="Start a Project" data-es="Iniciar proyecto">Start a Project</a>
+      <a href="#contact" class="btn btn-primary" data-en="Get a Free Website Demo" data-es="Obtener Demo Gratis">Get a Free Website Demo</a>
+      <a href="#work" class="btn btn-outline" data-en="See My Work" data-es="Ver mis proyectos">See My Work</a>
     </div>
+    <p class="hero-trust">
+      <span data-en="Helping local businesses get found, look professional, and get more customers." data-es="Ayudando a negocios locales a ser encontrados, verse profesionales y conseguir más clientes.">Helping local businesses get found, look professional, and get more customers.</span>
+    </p>
     <div class="hero-metrics">
       <div class="metric-card">
         <div class="metric-val">Fast</div>
@@ -294,13 +297,74 @@
 </section>
 
 <section id="contact">
-  <p class="contact-pre" data-en="Ready when you are" data-es="Listo cuando estés">Ready when you are</p>
-  <h2 class="contact-h">Need a site?<br><span class="ghost" data-en="Let's build it." data-es="Construyámoslo.">Let's build it.</span></h2>
-  <p class="contact-sub" data-en="Send me your business name, services, photos, and the best way customers should contact you. I'll help turn it into something clean, professional, and easy to share." data-es="Envíame el nombre de tu negocio, servicios, fotos y la mejor forma en que los clientes deben contactarte. Yo te ayudo a convertirlo en algo limpio, profesional y fácil de compartir.">Send me your business name, services, photos, and the best way customers should contact you. I'll help turn it into something clean, professional, and easy to share.</p>
-  <div class="contact-box">
-    <a href="mailto:hello@romanweb.com" class="contact-email">hello@romanweb.com</a>
-    <a href="sms:+10000000000" class="btn btn-primary" data-en="Text Me About a Website" data-es="Escríbeme sobre un sitio">Text Me About a Website</a>
+  <p class="contact-pre" data-en="Let's talk about your project" data-es="Hablemos de tu proyecto">Let's talk about your project</p>
+  <h2 class="contact-h"><span data-en="Get a free website demo" data-es="Obtén una demo gratis">Get a free website demo</span></h2>
+  <p class="contact-sub" data-en="Fill out the form below and I'll get back to you within 24 hours." data-es="Llena el formulario y te responderé en 24 horas.">Fill out the form below and I'll get back to you within 24 hours.</p>
+  
+  <form class="lead-form" action="https://formsubmit.co/roman.j.lopez09@gmail.com" method="POST">
+    <input type="hidden" name="_subject" data-en="New Website Lead from roman.web" data-es="Nuevo lead de sitio web desde roman.web">
+    <input type="hidden" name="_captcha" value="false">
+    
+    <div class="form-row">
+      <div class="form-group">
+        <label for="name" data-en="Your Name *" data-es="Tu Nombre *">Your Name *</label>
+        <input type="text" id="name" name="name" required data-en-placeholder="John Smith" data-es-placeholder="Juan Pérez">
+      </div>
+      <div class="form-group">
+        <label for="email" data-en="Email *" data-es="Correo *">Email *</label>
+        <input type="email" id="email" name="email" required data-en-placeholder="john@business.com" data-es-placeholder="juan@negocio.com">
+      </div>
+    </div>
+    
+    <div class="form-row">
+      <div class="form-group">
+        <label for="phone" data-en="Phone" data-es="Teléfono">Phone</label>
+        <input type="tel" id="phone" name="phone" data-en-placeholder="(555) 123-4567" data-es-placeholder="(555) 123-4567">
+      </div>
+      <div class="form-group">
+        <label for="business" data-en="Business Name *" data-es="Nombre del Negocio *">Business Name *</label>
+        <input type="text" id="business" name="business" required data-en-placeholder="Your Business Name" data-es-placeholder="Nombre de tu negocio">
+      </div>
+    </div>
+    
+    <div class="form-group">
+      <label for="project-type" data-en="Type of Project *" data-es="Tipo de Proyecto *">Type of Project *</label>
+      <select id="project-type" name="project-type" required>
+        <option value="" data-en="Select a project type..." data-es="Selecciona un tipo de proyecto...">Select a project type...</option>
+        <option value="new-website" data-en="New business website" data-es="Sitio web nuevo para negocio">New business website</option>
+        <option value="redesign" data-en="Website redesign" data-es="Rediseño de sitio web">Website redesign</option>
+        <option value="landing" data-en="Landing page" data-es="Página de aterrizaje">Landing page</option>
+        <option value="bilingual" data-en="Bilingual website" data-es="Sitio web bilingüe">Bilingual website</option>
+        <option value="portfolio" data-en="Portfolio website" data-es="Portafolio">Portfolio website</option>
+        <option value="product" data-en="Product website" data-es="Sitio para producto">Product website</option>
+        <option value="not-sure" data-en="Not sure yet" data-es="No estoy seguro todavía">Not sure yet</option>
+      </select>
+    </div>
+    
+    <div class="form-group">
+      <label for="website" data-en="Current Website or Social Media Link" data-en-placeholder="https://..." data-es="Enlace actual de sitio web o redes sociales" data-es-placeholder="https://...">Current Website or Social Media Link</label>
+      <input type="url" id="website" name="website" data-en-placeholder="https://..." data-es-placeholder="https://...">
+    </div>
+    
+    <div class="form-group">
+      <label for="assets" data-en="Link to photos, logo, or Google Drive folder (optional)" data-es="Enlace a fotos, logo o carpeta de Google Drive (opcional)">Link to photos, logo, or Google Drive folder (optional)</label>
+      <input type="url" id="assets" name="assets" data-en-placeholder="https://drive.google.com/..." data-es-placeholder="https://drive.google.com/...">
+    </div>
+    
+    <div class="form-group">
+      <label for="message" data-en="Project Details *" data-es="Detalles del Proyecto *">Project Details *</label>
+      <textarea id="message" name="message" rows="4" required data-en-placeholder="Tell me about your business, services, and what you need..." data-es-placeholder="Cuéntame sobre tu negocio, servicios y qué necesitas...">Tell me about your business, services, and what you need...</textarea>
+    </div>
+    
+    <button type="submit" class="btn btn-primary form-submit" data-en="Send Project Info" data-es="Enviar Información">Send Project Info</button>
+  </form>
+  
+  <div class="form-success" style="display:none;">
+    <div class="success-icon">✓</div>
+    <h3 data-en="Thank you!" data-es="¡Gracias!">Thank you!</h3>
+    <p data-en="I received your project info and I'll contact you soon." data-es="Recibí la información de tu proyecto y pronto me pondré en contacto contigo.">I received your project info and I'll contact you soon.</p>
   </div>
+  
   <div class="social-row">
     <a href="#" class="social-link">GitHub</a>
     <a href="#" class="social-link">LinkedIn</a>
@@ -312,6 +376,10 @@
   <span>© 2026 Roman Lopez. <span data-en="Simple websites for local businesses." data-es="Sitios web simples para negocios locales.">Simple websites for local businesses.</span></span>
   <span><span class="accent">Built clean</span> · <span data-en="mobile first" data-es="móvil primero">mobile first</span> · <span data-en="lead focused" data-es="enfocado en clientes">lead focused</span></span>
 </footer>
+
+<div class="mobile-sticky-cta">
+  <a href="#contact" data-en="Get Free Demo" data-es="Demo Gratis">Get Free Demo</a>
+</div>
 
 <script src="script.js"></script>
 </body>

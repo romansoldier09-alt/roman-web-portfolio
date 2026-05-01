@@ -27,6 +27,11 @@ function setLanguage(language) {
     }
   });
 
+  // Handle placeholders
+  document.querySelectorAll('[data-en-placeholder][data-es-placeholder]').forEach((el) => {
+    el.placeholder = el.dataset[`${language}Placeholder`] || el.placeholder;
+  });
+
   if (languageCurrent) {
     languageCurrent.textContent = language.toUpperCase();
   }
@@ -216,3 +221,20 @@ setInterval(() => {
 
 // Start with saved language
 setLanguage(currentLanguage);
+
+// Lead form handling
+const leadForm = document.querySelector('.lead-form');
+const formSuccess = document.querySelector('.form-success');
+
+if (leadForm) {
+  leadForm.addEventListener('submit', function(e) {
+    // Let formsubmit.co handle the submission, but show success message
+    setTimeout(() => {
+      if (leadForm.style.display !== 'none') {
+        leadForm.style.display = 'none';
+        formSuccess.style.display = 'block';
+        formSuccess.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+    }, 500);
+  });
+}
