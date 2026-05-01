@@ -124,7 +124,7 @@ nav{
   opacity:0;animation:fadeUp 0.9s ease 0.3s forwards;
 }
 .hero-h1 .ghost{color:transparent;-webkit-text-stroke:1px rgba(255,255,255,0.22)}
-.hero-h1 .accent-word{color:var(--accent)}
+.hero-h1 .accent-word{color:var(--accent);display:inline-block;min-width:8ch;text-align:left}
 .hero-sub{
   color:var(--muted);max-width:580px;font-size:0.95rem;line-height:1.8;margin-bottom:2rem;
   opacity:0;animation:fadeUp 0.9s ease 0.45s forwards;
@@ -318,6 +318,7 @@ footer .accent{color:var(--accent)}
   section{padding:3rem 1rem}
   .hero{padding:calc(var(--nav-height) + 1.5rem) 1rem 2rem}
   .hero-h1{font-size:2rem}
+  .hero-h1 .accent-word{min-width:6ch}
   .hero-sub{font-size:0.9rem}
   
   .metric-card{padding:0.75rem}
