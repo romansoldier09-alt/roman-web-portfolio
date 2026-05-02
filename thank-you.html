@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>Thank You | roman.web</title>
+  <meta name="description" content="Thank you for submitting your website project info to roman.web." />
+
+  <link rel="icon" type="image/png" href="assets/images/roman-lopez-logo-dark.png" />
+  <link rel="apple-touch-icon" href="assets/images/roman-lopez-logo-dark.png" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css" />
+
+  <style>
+    body {
+      min-height: 100vh;
+      background:
+        radial-gradient(circle at 18% 18%, rgba(0,217,163,0.16), transparent 28%),
+        radial-gradient(circle at 82% 24%, rgba(14,165,233,0.12), transparent 26%),
+        #080B0F;
+      overflow-x: hidden;
+    }
+
+    .thank-page {
+      position: relative;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 6rem 1.25rem;
+      overflow: hidden;
+    }
+
+    .thank-page::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(rgba(0,217,163,0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,217,163,0.04) 1px, transparent 1px);
+      background-size: 64px 64px;
+      mask-image: radial-gradient(circle at center, black 0%, transparent 72%);
+      pointer-events: none;
+    }
+
+    .thank-card {
+      position: relative;
+      z-index: 1;
+      width: min(720px, 100%);
+      text-align: center;
+      background: rgba(22, 28, 36, 0.78);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 18px;
+      padding: clamp(2rem, 6vw, 4rem);
+      box-shadow: 0 30px 100px rgba(0,0,0,0.45);
+      backdrop-filter: blur(18px);
+    }
+
+    .thank-logo {
+      display: inline-block;
+      font-family: var(--font-display);
+      font-size: 1.15rem;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      margin-bottom: 2rem;
+    }
+
+    .thank-logo span {
+      color: var(--accent);
+    }
+
+    .thank-icon {
+      width: 74px;
+      height: 74px;
+      margin: 0 auto 1.5rem;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      background: var(--accent);
+      color: var(--bg);
+      font-family: var(--font-display);
+      font-weight: 800;
+      font-size: 2rem;
+      box-shadow: 0 0 40px rgba(0,217,163,0.35);
+    }
+
+    .thank-eyebrow {
+      font-family: var(--font-mono);
+      color: var(--accent);
+      font-size: 0.72rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      margin-bottom: 0.9rem;
+    }
+
+    .thank-title {
+      font-family: var(--font-display);
+      font-size: clamp(2.25rem, 7vw, 4.7rem);
+      line-height: 0.95;
+      letter-spacing: -0.055em;
+      margin-bottom: 1.1rem;
+    }
+
+    .thank-title span {
+      color: var(--accent);
+    }
+
+    .thank-copy {
+      max-width: 520px;
+      margin: 0 auto 2rem;
+      color: var(--muted);
+      font-size: 1rem;
+      line-height: 1.8;
+    }
+
+    .thank-actions {
+      display: flex;
+      justify-content: center;
+      gap: 0.8rem;
+      flex-wrap: wrap;
+    }
+
+    .thank-meta {
+      margin-top: 2rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid var(--border);
+      font-family: var(--font-mono);
+      color: var(--muted2);
+      font-size: 0.68rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    @media (max-width: 520px) {
+      .thank-actions .btn {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <main class="thank-page">
+    <section class="thank-card" aria-labelledby="thank-title">
+      <a href="https://romansoldier09-alt.github.io/roman-web-portfolio/" class="thank-logo">roman<span>.</span>web</a>
+
+      <div class="thank-icon" aria-hidden="true">✓</div>
+
+      <p class="thank-eyebrow">Project info received</p>
+
+      <h1 class="thank-title" id="thank-title">
+        Thank you<span>.</span>
+      </h1>
+
+      <p class="thank-copy">
+        Your website demo request was submitted successfully. I’ll review your project details and contact you shortly with next steps.
+      </p>
+
+      <div class="thank-actions">
+        <a href="https://romansoldier09-alt.github.io/roman-web-portfolio/" class="btn btn-primary">Back to roman.web</a>
+        <a href="mailto:roman.j.lopez09@gmail.com" class="btn btn-outline">Email me</a>
+      </div>
+
+      <p class="thank-meta">Simple websites • Mobile first • Built for leads</p>
+    </section>
+  </main>
+</body>
+</html>
