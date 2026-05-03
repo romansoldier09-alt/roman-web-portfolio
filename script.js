@@ -230,11 +230,11 @@ setLanguage(currentLanguage);
 //
 // The only JS we add here is a loading state on the button so the user
 // knows something is happening while FormSubmit processes the request.
-const leadForm = document.querySelector('.lead-form');
+const leadForms = document.querySelectorAll('.lead-form');
 
-if (leadForm) {
-  // Clear placeholder textarea value on focus so users don't have to delete it
-  const messageTextarea = leadForm.querySelector('textarea[name="message"]');
+leadForms.forEach((form) => {
+  // Clear placeholder textarea value on focus so users don't have to delete it.
+  const messageTextarea = form.querySelector('textarea[name="message"]');
   if (messageTextarea) {
     const defaultText = messageTextarea.value.trim();
     messageTextarea.addEventListener('focus', function () {
@@ -249,13 +249,13 @@ if (leadForm) {
     });
   }
 
-  leadForm.addEventListener('submit', function () {
-    // Show loading state — form submits normally, browser navigates to thank-you.html
-    const submitBtn = leadForm.querySelector('button[type="submit"]');
+  form.addEventListener('submit', function () {
+    // Show loading state — form submits normally, browser navigates to thank-you.html.
+    const submitBtn = form.querySelector('button[type="submit"]');
     if (submitBtn) {
-      submitBtn.textContent = 'Sending…';
+      submitBtn.textContent = currentLanguage === 'es' ? 'Enviando…' : 'Sending…';
       submitBtn.disabled = true;
     }
-    // Do NOT call e.preventDefault() — let FormSubmit handle delivery + redirect
+    // Do NOT call e.preventDefault() — let FormSubmit handle delivery + redirect.
   });
-}
+});
