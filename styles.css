@@ -381,13 +381,14 @@ footer .accent{color:var(--accent)}
 .mobile-sticky-cta{
   display:none;position:fixed;bottom:0;left:0;right:0;background:rgba(8,11,15,0.95);border-top:1px solid var(--border);padding:0.75rem 1rem;z-index:400;backdrop-filter:blur(10px)
 }
+.mobile-sticky-cta.is-hidden{display:none}
 .mobile-sticky-cta a{
   display:block;background:var(--accent);color:var(--bg);text-align:center;padding:0.85rem;border-radius:3px;font-family:var(--font-mono);font-size:0.7rem;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;text-decoration:none
 }
 
 @media (max-width: 900px) {
   .mobile-sticky-cta{display:block}
-  #contact{padding-bottom:5rem}
+  #contact{padding-bottom:7rem}
   .lead-form{padding-bottom:2rem}
 }
 

@@ -222,40 +222,21 @@ setInterval(() => {
 // Start with saved language
 setLanguage(currentLanguage);
 
-// ─── Lead form handling ────────────────────────────────────────────────────────
-// FormSubmit.co does a real HTTP POST and redirects the browser to _next.
-// We do NOT preventDefault — we let the form submit normally so FormSubmit
-// receives the data and emails it. The _next hidden field handles the redirect
-// to thank-you.html automatically.
-//
-// The only JS we add here is a loading state on the button so the user
-// knows something is happening while FormSubmit processes the request.
-const leadForms = document.querySelectorAll('.lead-form');
 
-leadForms.forEach((form) => {
-  // Clear placeholder textarea value on focus so users don't have to delete it.
-  const messageTextarea = form.querySelector('textarea[name="message"]');
-  if (messageTextarea) {
-    const defaultText = messageTextarea.value.trim();
-    messageTextarea.addEventListener('focus', function () {
-      if (this.value.trim() === defaultText) {
-        this.value = '';
-      }
-    });
-    messageTextarea.addEventListener('blur', function () {
-      if (this.value.trim() === '') {
-        this.value = defaultText;
-      }
-    });
-  }
+// ─── Mobile sticky CTA safety ────────────────────────────────────────────────
+// The form is submitted directly by the browser to FormSubmit.
+// Do not preventDefault, disable the button, or rewrite the form on submit.
+// This keeps submissions reliable across desktop browsers, mobile Safari, mobile Chrome,
+// and in-app browsers.
+const stickyCta = document.querySelector('.mobile-sticky-cta');
+const contactSection = document.getElementById('contact');
 
-  form.addEventListener('submit', function () {
-    // Show loading state — form submits normally, browser navigates to thank-you.html.
-    const submitBtn = form.querySelector('button[type="submit"]');
-    if (submitBtn) {
-      submitBtn.textContent = currentLanguage === 'es' ? 'Enviando…' : 'Sending…';
-      submitBtn.disabled = true;
-    }
-    // Do NOT call e.preventDefault() — let FormSubmit handle delivery + redirect.
-  });
-});
+if (stickyCta && contactSection && 'IntersectionObserver' in window) {
+  const stickyObserver = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      stickyCta.classList.toggle('is-hidden', entry.isIntersecting);
+    });
+  }, { threshold: 0.12 });
+
+  stickyObserver.observe(contactSection);
+}

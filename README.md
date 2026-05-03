@@ -24,10 +24,3 @@ Important:
    Facebook Sharing Debugger
    LinkedIn Post Inspector
    Twitter/X Card Validator
-
-
-Form fix notes:
-- There is one lead form in index.html. The mobile sticky CTA only scrolls to that same form.
-- FormSubmit hidden fields now include _subject, _captcha, _template, _next, and _autoresponse.
-- script.js does not use preventDefault, so FormSubmit receives the real POST request and handles email delivery plus the thank-you.html redirect.
-- After deployment, test from an incognito desktop window and a mobile browser, then check Inbox, Spam, Promotions, and FormSubmit activation/confirmation status.
