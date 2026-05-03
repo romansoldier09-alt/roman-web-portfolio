@@ -222,19 +222,40 @@ setInterval(() => {
 // Start with saved language
 setLanguage(currentLanguage);
 
-// Lead form handling
+// ─── Lead form handling ────────────────────────────────────────────────────────
+// FormSubmit.co does a real HTTP POST and redirects the browser to _next.
+// We do NOT preventDefault — we let the form submit normally so FormSubmit
+// receives the data and emails it. The _next hidden field handles the redirect
+// to thank-you.html automatically.
+//
+// The only JS we add here is a loading state on the button so the user
+// knows something is happening while FormSubmit processes the request.
 const leadForm = document.querySelector('.lead-form');
-const formSuccess = document.querySelector('.form-success');
 
 if (leadForm) {
-  leadForm.addEventListener('submit', function(e) {
-    // Let formsubmit.co handle the submission, but show success message
-    setTimeout(() => {
-      if (leadForm.style.display !== 'none') {
-        leadForm.style.display = 'none';
-        formSuccess.style.display = 'block';
-        formSuccess.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  // Clear placeholder textarea value on focus so users don't have to delete it
+  const messageTextarea = leadForm.querySelector('textarea[name="message"]');
+  if (messageTextarea) {
+    const defaultText = messageTextarea.value.trim();
+    messageTextarea.addEventListener('focus', function () {
+      if (this.value.trim() === defaultText) {
+        this.value = '';
       }
-    }, 500);
+    });
+    messageTextarea.addEventListener('blur', function () {
+      if (this.value.trim() === '') {
+        this.value = defaultText;
+      }
+    });
+  }
+
+  leadForm.addEventListener('submit', function () {
+    // Show loading state — form submits normally, browser navigates to thank-you.html
+    const submitBtn = leadForm.querySelector('button[type="submit"]');
+    if (submitBtn) {
+      submitBtn.textContent = 'Sending…';
+      submitBtn.disabled = true;
+    }
+    // Do NOT call e.preventDefault() — let FormSubmit handle delivery + redirect
   });
 }
