@@ -365,24 +365,20 @@
       </select>
     </div>
     
-    <div class="form-group">
-      <label for="current-website" data-en="Current Website URL (optional)" data-es="Sitio web actual (opcional)">Current Website URL (optional)</label>
-      <input type="url" id="current-website" name="current_website_url" data-en-placeholder="https://yourcurrentwebsite.com" data-es-placeholder="https://tusitioactual.com">
+    <div class="form-row">
+      <div class="form-group">
+        <label for="current-website" data-en="Current website URL (optional)" data-es="Sitio web actual (opcional)">Current website URL (optional)</label>
+        <input type="text" id="current-website" name="current_website_url" inputmode="url" autocomplete="url" data-en-placeholder="Example: yourbusiness.com" data-es-placeholder="Ejemplo: tunegocio.com">
+      </div>
+      <div class="form-group">
+        <label for="social-url" data-en="Social media URL (optional)" data-es="Red social (opcional)">Social media URL (optional)</label>
+        <input type="text" id="social-url" name="social_media_url" inputmode="url" data-en-placeholder="Facebook, Instagram, TikTok, etc." data-es-placeholder="Facebook, Instagram, TikTok, etc.">
+      </div>
     </div>
-    
+
     <div class="form-group">
-      <label for="social-url" data-en="Social Media URL (optional)" data-es="URL de redes sociales (opcional)">Social Media URL (optional)</label>
-      <input type="url" id="social-url" name="social_media_url" data-en-placeholder="Facebook, Instagram, Google Business Profile, etc." data-es-placeholder="Facebook, Instagram, Perfil de Google, etc.">
-    </div>
-    
-    <div class="form-group">
-      <label for="preferred-url" data-en="Preferred Website URL / Domain Idea (optional)" data-es="URL preferida / idea de dominio (opcional)">Preferred Website URL / Domain Idea (optional)</label>
-      <input type="text" id="preferred-url" name="preferred_website_url" data-en-placeholder="Example: mybusinessutah.com" data-es-placeholder="Ejemplo: minegocioutah.com">
-    </div>
-    
-    <div class="form-group">
-      <label for="assets-link" data-en="Photo or file link (optional)" data-es="Enlace de fotos o archivos (opcional)">Photo or file link (optional)</label>
-      <input type="text" id="assets-link" name="assets_link" data-en-placeholder="Google Drive, Dropbox, iCloud, or photo album link" data-es-placeholder="Google Drive, Dropbox, iCloud o álbum de fotos">
+      <label for="preferred-domain" data-en="Preferred website URL / domain idea (optional)" data-es="URL o dominio preferido (opcional)">Preferred website URL / domain idea (optional)</label>
+      <input type="text" id="preferred-domain" name="preferred_website_url_or_domain" inputmode="url" data-en-placeholder="Example: yourbusiness.com or a domain idea you like" data-es-placeholder="Ejemplo: tunegocio.com o una idea de dominio">
     </div>
 
     <div class="form-group">
@@ -395,11 +391,16 @@
       </label>
       <input class="file-upload-input" type="file" id="project-files" name="attachment" multiple accept="image/*,.pdf,.doc,.docx,.txt,.zip">
     </div>
-    <p class="form-helper" data-en="You can also send photos or logos later by text or email." data-es="También puedes mandar fotos o logos después por mensaje o correo.">You can also send photos or logos later by text or email.</p>
-    
+
     <div class="form-group">
-      <label for="contact-time" data-en="Best time to contact you" data-es="Mejor horario para contactarte">Best time to contact you</label>
-      <input type="text" id="contact-time" name="contact-time" data-en-placeholder="Example: Weekdays after 5 PM, mornings, anytime" data-es-placeholder="Ejemplo: Entre semana después de las 5 PM, mañanas, cualquier hora">
+      <label for="contact-time" data-en="Best time to reach out" data-es="Mejor horario para contactarte">Best time to reach out</label>
+      <select id="contact-time" name="best_time_to_reach_out">
+        <option value="" data-en="Select a time..." data-es="Selecciona un horario...">Select a time...</option>
+        <option value="morning" data-en="Morning" data-es="Mañana">Morning</option>
+        <option value="afternoon" data-en="Afternoon" data-es="Tarde">Afternoon</option>
+        <option value="evening" data-en="Evening" data-es="Noche">Evening</option>
+        <option value="anytime" data-en="Anytime" data-es="Cualquier hora">Anytime</option>
+      </select>
     </div>
     
     <div class="form-group">

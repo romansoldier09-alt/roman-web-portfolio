@@ -242,7 +242,7 @@ if (stickyCta && contactSection && 'IntersectionObserver' in window) {
 }
 
 
-// File upload label feedback + drag styling. Does not intercept or rewrite form submit.
+// File upload label feedback + drag styling only. This does not intercept or rewrite form submit.
 const fileInput = document.getElementById('project-files');
 const fileArea = document.querySelector('.file-upload-area');
 const fileSelected = document.querySelector('.file-upload-selected');

@@ -1,0 +1,16 @@
+Roman Built Web Studio form-friendly update checks
+
+PASS - Single lead form only
+PASS - Form uses FormSubmit
+PASS - Form uses POST
+PASS - Form supports file upload
+PASS - Redirects to live thank-you page
+PASS - Current website field is optional text
+PASS - Social URL field is optional text
+PASS - Preferred domain field is optional text
+PASS - Best time dropdown added
+PASS - Old photo/link field removed
+PASS - No JS submit event listener
+PASS - Thank-you page still says 24–48 hours
+
+Note: Live email delivery still needs one desktop and one mobile test after deployment.

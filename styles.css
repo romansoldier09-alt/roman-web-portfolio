@@ -1034,3 +1034,43 @@ footer .accent{color:var(--accent)}
     top: .65rem;
   }
 }
+
+
+/* ========================================
+   FORM FRIENDLY UPDATE
+   Optional URL fields are text inputs so visitors are not blocked by browser URL validation.
+======================================== */
+.form-group select {
+  cursor: pointer;
+}
+
+.form-group input[inputmode="url"] {
+  letter-spacing: .01em;
+}
+
+.form-group input[inputmode="url"]:invalid {
+  border-color: var(--border);
+  box-shadow: none;
+}
+
+.form-group input[inputmode="url"]:focus,
+.form-group select:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(0,255,102,.08);
+}
+
+.file-upload-area {
+  margin-top: .2rem;
+}
+
+.file-upload-copy strong {
+  color: var(--accent3);
+  font-weight: 700;
+}
+
+@media (max-width: 640px) {
+  .form-row {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+}
