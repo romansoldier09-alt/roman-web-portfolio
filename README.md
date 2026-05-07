@@ -1,26 +1,8 @@
-# roman-web-portfolio deploy notes
+# Roman Built Web Studio
 
-Files included:
-- index.html
-- styles.css
-- script.js
+Updated brand-matched static website package for romanbuiltwebstudio.com.
 
-Important:
-1. Keep your images in:
-   assets/images/roman-web-preview.png
-   assets/images/roman-lopez-logo-dark.png
-   assets/images/roman-web-portfolio-mockup.png
-
-2. The social preview image is set to:
-   https://romansoldier09-alt.github.io/roman-web-portfolio/assets/images/roman-web-preview.png
-
-3. If you deploy to a different URL, update these tags in index.html:
-   og:image
-   og:image:secure_url
-   og:url
-   twitter:image
-
-4. After deployment, test the preview with:
-   Facebook Sharing Debugger
-   LinkedIn Post Inspector
-   Twitter/X Card Validator
+## Notes
+- Social preview uses `assets/images/roman-built-web-studio-local-business-websites-hero.png`.
+- FormSubmit redirects to `https://romanbuiltwebstudio.com/thank-you.html`.
+- Lead form uses `multipart/form-data` for file uploads.

@@ -240,3 +240,39 @@ if (stickyCta && contactSection && 'IntersectionObserver' in window) {
 
   stickyObserver.observe(contactSection);
 }
+
+
+// File upload label feedback + drag styling. Does not intercept or rewrite form submit.
+const fileInput = document.getElementById('project-files');
+const fileArea = document.querySelector('.file-upload-area');
+const fileSelected = document.querySelector('.file-upload-selected');
+
+if (fileInput && fileArea && fileSelected) {
+  fileInput.addEventListener('change', () => {
+    const count = fileInput.files ? fileInput.files.length : 0;
+    fileSelected.textContent = count === 0 ? '' : count === 1 ? '1 file selected' : `${count} files selected`;
+  });
+
+  ['dragenter', 'dragover'].forEach((eventName) => {
+    fileArea.addEventListener(eventName, (event) => {
+      event.preventDefault();
+      fileArea.classList.add('is-dragover');
+    });
+  });
+
+  ['dragleave', 'drop'].forEach((eventName) => {
+    fileArea.addEventListener(eventName, (event) => {
+      event.preventDefault();
+      fileArea.classList.remove('is-dragover');
+      if (eventName === 'drop' && event.dataTransfer && event.dataTransfer.files.length) {
+        try {
+          fileInput.files = event.dataTransfer.files;
+          const changeEvent = new Event('change', { bubbles: true });
+          fileInput.dispatchEvent(changeEvent);
+        } catch (error) {
+          fileSelected.textContent = 'Drop not supported here. Please click to upload.';
+        }
+      }
+    });
+  });
+}

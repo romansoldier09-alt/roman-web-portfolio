@@ -1,0 +1,36 @@
+Roman Built Web Studio launch readiness checks
+
+PASS - Asset exists: assets/images/roman-built-web-studio-logo-main.png
+PASS - Asset exists: assets/images/roman-built-web-studio-local-business-websites-hero.png
+PASS - Asset exists: assets/images/roman-built-web-studio-logo-icon.png
+PASS - OG image uses live domain hero image
+PASS - OG URL uses live domain
+PASS - Twitter image uses hero image
+PASS - Header uses main logo
+PASS - Mobile menu uses full logo
+PASS - Single lead form only
+PASS - Form action FormSubmit
+PASS - Form method POST
+PASS - Form enctype multipart for upload
+PASS - Redirects to live thank-you page
+PASS - Required hidden subject present
+PASS - Captcha disabled present
+PASS - Autoresponse present
+PASS - File upload input present
+PASS - Footer no longer says © 2026 Roman Lopez
+PASS - Footer says Roman Built Web Studio
+PASS - Earthly Blooms corrected
+PASS - Roman numerals in simple website cards
+PASS - Roman numerals in process cards
+PASS - Roman numerals in project cards
+PASS - Thank you page title updated
+PASS - Thank you page uses main logo
+PASS - Thank you page says 24–48 hours
+PASS - Thank you page uses Roman numeral I
+PASS - Thank you page uses Roman numeral III
+PASS - Thank you back link live domain
+PASS - No JavaScript submit interception on the lead form
+PASS - Mobile sticky CTA observer still present
+PASS - Premium close button CSS added
+
+Note: I can verify the code/package setup, but live FormSubmit email delivery must be confirmed after deployment with one desktop test and one mobile test.
