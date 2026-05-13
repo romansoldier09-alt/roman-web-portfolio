@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- =============================================
+       FRSH Mobile Detail — thank-you.html
+       Shown after quote form submission
+       ============================================= -->
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Request Received — FRSH Mobile Detail</title>
+  <meta name="description" content="Thanks for reaching out to FRSH Mobile Detail. We'll be in touch shortly." />
+  <meta name="robots" content="noindex, nofollow" />
+  <meta name="theme-color" content="#030303" />
+  <link rel="icon" type="image/png" href="assets/logo/frsh-logo.png" />
+  <meta property="og:title" content="Request Received — FRSH Mobile Detail" />
+  <meta property="og:description" content="Thanks for reaching out to FRSH Mobile Detail." />
+  <meta property="og:image" content="assets/og/frsh-og-preview.png" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+
+  <style>
+    /* Reuse brand variables inline for standalone page */
+    :root {
+      --black:      #030303;
+      --blue:       #1a8cff;
+      --blue-bright:#3fa0ff;
+      --blue-glow:  rgba(26,140,255,0.35);
+      --white:      #ffffff;
+      --white-60:   rgba(255,255,255,0.6);
+      --white-30:   rgba(255,255,255,0.3);
+      --dark-card:  #0f0f12;
+      --dark-border:#1a1a22;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { font-size: 16px; }
+    body {
+      background: var(--black);
+      color: var(--white);
+      font-family: 'Inter', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 40px 24px;
+      text-align: center;
+      position: relative;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    a:focus-visible, button:focus-visible {
+      outline: 2px solid var(--blue);
+      outline-offset: 3px;
+    }
+
+    /* Background glow */
+    body::before {
+      content: '';
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 700px;
+      height: 500px;
+      background: radial-gradient(ellipse, rgba(26,140,255,0.12) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    /* Grid overlay */
+    body::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(26,140,255,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(26,140,255,0.03) 1px, transparent 1px);
+      background-size: 60px 60px;
+      pointer-events: none;
+    }
+
+    .ty-card {
+      position: relative;
+      z-index: 1;
+      background: var(--dark-card);
+      border: 1px solid var(--dark-border);
+      border-radius: 16px;
+      padding: 56px 48px;
+      max-width: 560px;
+      width: 100%;
+      animation: fadeUp 0.7s ease forwards;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Logo */
+    .ty-logo {
+      width: 160px;
+      height: auto;
+      margin: 0 auto 32px;
+      display: block;
+      filter: drop-shadow(0 0 20px rgba(26,140,255,0.3));
+    }
+
+    /* Check icon */
+    .icon-box { width: 52px; height: 52px; display:inline-flex; align-items:center; justify-content:center; border-radius:14px; background: rgba(26,140,255,0.08); border:1px solid rgba(26,140,255,0.25); transition: all .25s ease; }
+    .icon-box-lg { width:72px; height:72px; border-radius:18px; }
+    .icon-premium:hover { box-shadow: 0 0 24px var(--blue-glow); }
+    .icon { width:22px; height:22px; stroke: currentColor; stroke-width:1.8; fill:none; }
+    .icon-blue { color: var(--blue); }
+    .btn-icon { width:18px; height:18px; }
+    .ty-icon { margin: 0 auto 28px; box-shadow: 0 0 24px var(--blue-glow); animation: pulseIcon 2.5s ease-in-out infinite; }
+
+    @keyframes pulseIcon {
+      0%,100% { box-shadow: 0 0 24px var(--blue-glow); }
+      50%      { box-shadow: 0 0 40px var(--blue-glow); }
+    }
+
+    .ty-label {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--blue);
+      margin-bottom: 12px;
+    }
+
+    h1 {
+      font-family: 'Orbitron', sans-serif;
+      font-size: clamp(1.4rem, 4vw, 2rem);
+      font-weight: 900;
+      line-height: 1.15;
+      margin-bottom: 16px;
+      letter-spacing: 0.02em;
+    }
+
+    .ty-sub {
+      font-size: 0.95rem;
+      color: var(--white-60);
+      line-height: 1.75;
+      margin-bottom: 32px;
+    }
+
+    .ty-phone {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: var(--blue);
+      text-decoration: none;
+      margin-bottom: 32px;
+      transition: color 0.2s;
+    }
+    .ty-phone:hover { color: var(--blue-bright); }
+
+    .ty-btns {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 14px 24px;
+      border-radius: 6px;
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 0.95rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      text-decoration: none;
+      transition: all 0.25s ease;
+      cursor: pointer;
+    }
+
+    .btn-primary {
+      background: var(--blue);
+      color: var(--white);
+      box-shadow: 0 0 20px var(--blue-glow);
+    }
+    .btn-primary:hover {
+      background: var(--blue-bright);
+      box-shadow: 0 0 32px var(--blue-glow);
+    }
+
+    .btn-outline {
+      background: transparent;
+      color: var(--white-60);
+      border: 1.5px solid var(--dark-border);
+    }
+    .btn-outline:hover {
+      border-color: var(--blue);
+      color: var(--blue);
+    }
+
+    /* Divider */
+    .divider {
+      width: 100%;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--dark-border), transparent);
+      margin: 28px 0;
+    }
+
+    .ty-footer {
+      margin-top: 28px;
+      font-size: 0.75rem;
+      color: var(--white-30);
+    }
+    .ty-footer a {
+      color: var(--blue);
+      text-decoration: none;
+    }
+
+    @media (max-width: 520px) {
+      .ty-card { padding: 36px 24px; }
+    }
+  </style>
+</head>
+<body>
+
+  <svg xmlns="http://www.w3.org/2000/svg" style="position:absolute;width:0;height:0;overflow:hidden" aria-hidden="true" focusable="false">
+    <symbol id="icon-phone" viewBox="0 0 24 24" fill="none"><path d="M5 4h3l1.5 4-2 1.5a15 15 0 0 0 6 6L15 14l4 1.5v3a2 2 0 0 1-2.2 2A17 17 0 0 1 3.5 7.2 2 2 0 0 1 5 4Z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="icon-message" viewBox="0 0 24 24" fill="none"><path d="M5 6h14a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H9l-4 3v-3H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2Z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M8 10h8M8 14h5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></symbol>
+    <symbol id="icon-car" viewBox="0 0 24 24" fill="none"><path d="M3 13l2-5a2 2 0 0 1 1.87-1.3h10.26A2 2 0 0 1 19 8l2 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M5 13h14a2 2 0 0 1 2 2v3h-2a2 2 0 0 1-2-2H7a2 2 0 0 1-2 2H3v-3a2 2 0 0 1 2-2Z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><circle cx="7.5" cy="16.5" r="1.2" fill="currentColor"/><circle cx="16.5" cy="16.5" r="1.2" fill="currentColor"/></symbol>
+    <symbol id="icon-check-circle" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.8"/><path d="m8.5 12 2.4 2.4 4.6-4.8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  </svg>
+
+  <div class="ty-card">
+
+    <!-- Place the uploaded logo inside assets/logo/ and rename it to frsh-logo.png. -->
+    <img src="assets/logo/frsh-logo.png" alt="FRSH Mobile Detail" class="ty-logo" />
+
+    <div class="ty-icon icon-box icon-box-lg icon-premium"><svg class="icon icon-blue" aria-hidden="true"><use href="#icon-check-circle"></use></svg></div>
+
+    <p class="ty-label">Request Received</p>
+
+    <h1>You're On Your Way To Getting FRSH</h1>
+
+    <p class="ty-sub">
+      Thanks for reaching out! We've received your quote request and will be in touch
+      shortly to confirm availability and get your appointment scheduled.<br><br>
+      For the fastest response, text us directly:
+    </p>
+
+    <!-- REPLACE: Phone number if changed -->
+    <a href="sms:3107049963?body=Hi%20FRSH%2C%20I%20just%20submitted%20a%20quote%20request%20on%20your%20website." class="ty-phone">
+      <svg class="icon btn-icon" aria-hidden="true"><use href="#icon-message"></use></svg>310-704-9963
+    </a>
+
+    <div class="divider"></div>
+
+    <div class="ty-btns">
+      <a href="sms:3107049963?body=Hi%20FRSH%2C%20I%20just%20submitted%20a%20quote%20request%20on%20your%20website."
+         class="btn btn-primary"><svg class="icon btn-icon" aria-hidden="true"><use href="#icon-message"></use></svg>Text Us to Confirm</a>
+      <a href="tel:3107049963" class="btn btn-outline"><svg class="icon btn-icon" aria-hidden="true"><use href="#icon-phone"></use></svg>Call 310-704-9963</a>
+      <a href="index.html" class="btn btn-outline"><svg class="icon btn-icon" aria-hidden="true"><use href="#icon-car"></use></svg>Back to FRSH Mobile Detail</a>
+    </div>
+
+  </div>
+
+  <p class="ty-footer">
+    © 2025 FRSH Mobile Detail ·
+    <a href="index.html">frshdetail.com</a><!-- REPLACE with real domain -->
+  </p>
+
+</body>
+</html>
