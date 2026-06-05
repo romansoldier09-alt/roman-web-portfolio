@@ -264,6 +264,101 @@
     .status .who{font-size:1.35rem;} .status{padding:14px 15px;}
     .turn-chip{width:26px; height:26px;}
   }
+
+  /* ===================== CONFETTI ===================== */
+  @keyframes confettiFall {
+    to { transform: translateY(100vh) rotateZ(360deg); opacity: 0; }
+  }
+  .confetti {
+    position: fixed; pointer-events: none; z-index: 999;
+    width: 10px; height: 10px; animation: confettiFall 3s ease-out forwards;
+  }
+
+  /* ===================== PASS-DEVICE TRANSITION ===================== */
+  .handoff { transition: opacity .3s ease-in; }
+  .handoff.show { animation: handoffSlideIn .5s ease-out; }
+  @keyframes handoffSlideIn { 
+    0% { opacity: 0; transform: scale(.8); }
+    100% { opacity: 1; transform: scale(1); }
+  }
+  .overlay-card { animation: overlayCardBounce .6s cubic-bezier(.34,1.56,.64,1); }
+  @keyframes overlayCardBounce {
+    0% { transform: scale(0.3) translateY(40px); opacity: 0; }
+    100% { transform: scale(1) translateY(0); opacity: 1; }
+  }
+
+  /* ===================== ENHANCED ANIMATIONS ===================== */
+  .col.just-claimed .col-head { animation: claimPop .6s cubic-bezier(.34,1.56,.64,1); }
+  .col.just-claimed { animation: claimGlow 1.5s ease-out; }
+  @keyframes claimPop {
+    0% { transform: scale(0.4) rotate(-15deg); }
+    55% { transform: scale(1.22) rotate(4deg); }
+    100% { transform: scale(1) rotate(0); }
+  }
+  @keyframes claimGlow {
+    0% { filter: drop-shadow(0 0 20px var(--turn)) brightness(1.3); }
+    50% { filter: drop-shadow(0 0 8px var(--turn)) brightness(1.1); }
+    100% { filter: none; }
+  }
+
+  /* ===================== VOLUME CONTROL ===================== */
+  .volume-control {
+    display: flex; align-items: center; gap: 8px; padding: 12px;
+    background: var(--score-bg); border-radius: 12px; margin-bottom: 12px;
+  }
+  .volume-control label { font-size: .9rem; color: var(--ink-soft); flex: none; }
+  .volume-slider {
+    flex: 1; height: 6px; appearance: none; background: var(--line);
+    border-radius: 3px; cursor: pointer; max-width: 120px;
+  }
+  .volume-slider::-webkit-slider-thumb {
+    appearance: none; width: 16px; height: 16px; border-radius: 50%;
+    background: var(--accent); cursor: pointer; box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+  }
+  .volume-slider::-moz-range-thumb {
+    width: 16px; height: 16px; border-radius: 50%; border: none;
+    background: var(--accent); cursor: pointer; box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+  }
+  .volume-value { font-size: .85rem; color: var(--ink); min-width: 30px; text-align: right; }
+
+  /* ===================== STATS SCREEN ===================== */
+  .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px; }
+  .stat-card {
+    background: var(--score-bg); border: 1px solid var(--line); border-radius: 12px;
+    padding: 14px; text-align: center;
+  }
+  .stat-label { font-size: .75rem; color: var(--ink-soft); letter-spacing: 1px; text-transform: uppercase; }
+  .stat-value { font-family: "Fredoka"; font-size: 1.8rem; font-weight: 600; color: var(--accent); margin-top: 4px; }
+  .stat-list { max-height: 200px; overflow-y: auto; }
+  .stat-item {
+    display: flex; justify-content: space-between; align-items: center; padding: 8px 0;
+    border-bottom: 1px solid var(--line); font-size: .9rem;
+  }
+  .stat-item:last-child { border: none; }
+  .stat-player-name { font-family: "Fredoka"; color: var(--ink); }
+  .stat-player-count { font-weight: 600; color: var(--accent); }
+
+  /* ===================== HOUSE RULES ===================== */
+  .rule-item {
+    display: flex; align-items: center; gap: 12px; padding: 10px 0;
+    border-bottom: 1px solid var(--line);
+  }
+  .rule-item:last-child { border: none; }
+  .rule-toggle {
+    appearance: none; width: 44px; height: 26px; background: var(--line);
+    border-radius: 13px; cursor: pointer; transition: .2s; position: relative;
+    flex: none;
+  }
+  .rule-toggle:checked { background: var(--accent); }
+  .rule-toggle::after {
+    content: ''; position: absolute; width: 22px; height: 22px;
+    background: white; border-radius: 11px; top: 2px; left: 2px;
+    transition: left .2s;
+  }
+  .rule-toggle:checked::after { left: 16px; }
+  .rule-label { flex: 1; }
+  .rule-label-text { font-family: "Fredoka"; font-weight: 600; font-size: .95rem; display: block; }
+  .rule-label-desc { font-size: .8rem; color: var(--ink-soft); margin-top: 2px; }
 </style>
 </head>
 <body>
@@ -273,6 +368,9 @@
     <div class="top-btns">
       <button class="ghost-btn icon-btn" id="howBtn" aria-label="How to play" title="How to play">?</button>
       <button class="ghost-btn icon-btn" id="themeBtn" aria-label="Theme" title="Light / dark">🌙</button>
+      <button class="ghost-btn icon-btn" id="statsBtn" aria-label="Statistics" title="Statistics" style="display:none;">📊</button>
+      <button class="ghost-btn icon-btn" id="rulesBtn" aria-label="House rules" title="House rules" style="display:none;">⚙️</button>
+      <button class="ghost-btn icon-btn" id="settingsBtn" aria-label="Settings" title="Settings">⚡</button>
       <button class="ghost-btn icon-btn" id="muteBtn" aria-label="Sound" title="Sound">🔊</button>
       <button class="ghost-btn" id="newGameBtn" style="display:none;">New Game</button>
     </div>
@@ -642,6 +740,7 @@ function animateDiceFaces(){
   },55);
 }
 function performRoll(){
+  vibrate([20, 10, 20]); // Dice roll haptic pattern
   SFX.unlock();
   doRoll(state);            // logic untouched
   render();
@@ -873,9 +972,21 @@ function onStop(){
   doStop(state);                       // logic untouched (advances turn / sets winner)
   const gained = COLS.filter(c=>state.claimed[c]!=null && !before.includes(c));
   recentClaims = gained;
+  
+  // Haptic feedback
+  if(gained.length) {
+    vibrate([30, 20, 30, 20, 30]); // Column claim pattern
+  } else {
+    vibrate([50, 50]); // Bank pattern
+  }
+  
   if (state.phase==='gameOver'){
     if (gained.length) SFX.claim();
-    setTimeout(()=>SFX.win(), gained.length?320:0);
+    setTimeout(()=>{
+      SFX.win();
+      createConfetti(); // Confetti celebration
+    }, gained.length?320:0);
+    recordGameEnd(); // Track stats
   } else {
     if (gained.length) SFX.claim(); else SFX.bank();
     if (inTutorial) tutorialBanked=true;
@@ -970,17 +1081,303 @@ $('confirmNew').onclick=()=>{
   closeModal($('modalConfirm')); clearSave(); inTutorial=false; state=null; showSetup();
 };
 
+/* ============================================================
+   ENHANCED FEATURES: Stats, Confetti, Haptics, Volume, etc.
+   ============================================================ */
+const STATS_KEY = 'cs_stats', VOLUME_KEY = 'cs_volume', HAPTIC_KEY = 'cs_haptic', CONFETTI_KEY = 'cs_confetti';
+const HOUSE_RULES_KEY = 'cs_houseRules';
+
+// Settings state
+let volumeLevel = 85;
+let hapticEnabled = true;
+let confettiEnabled = true;
+let houseRules = {
+  soundEffects: true,
+  extendedRules: false,
+  strictClaimingMode: false
+};
+
+// Statistics
+function getStats(){
+  try {
+    const raw = load(STATS_KEY);
+    return raw ? JSON.parse(raw) : { gamesPlayed: 0, playerStats: {}, longestTurn: 0, mostColumns: 0 };
+  } catch(e) { return { gamesPlayed: 0, playerStats: {}, longestTurn: 0, mostColumns: 0 }; }
+}
+function saveStats(stats){
+  store(STATS_KEY, JSON.stringify(stats));
+}
+function recordGameEnd(){
+  if(inTutorial || !state || state.phase !== 'gameOver' || state.players.length < 2) return;
+  const stats = getStats();
+  stats.gamesPlayed++;
+  const winner = state.players[state.winner].name;
+  if(!stats.playerStats[winner]) stats.playerStats[winner] = 0;
+  stats.playerStats[winner]++;
+  saveStats(stats);
+  trackTurnMetrics();
+}
+function trackTurnMetrics(){
+  // Track longest turn (steps gained) and most columns claimed in a single stop
+  const stats = getStats();
+  for(const p of state.players){
+    const claims = COLS.filter(c => state.claimed[c] === state.players.indexOf(p)).length;
+    stats.mostColumns = Math.max(stats.mostColumns, claims);
+  }
+  saveStats(stats);
+}
+
+// Confetti animation
+function createConfetti(){
+  if(!confettiEnabled) return;
+  const colors = ['#1f6f5c', '#b9462f', '#f3ece0', '#6b6354', '#185647'];
+  for(let i = 0; i < 50; i++){
+    const conf = document.createElement('div');
+    conf.className = 'confetti';
+    conf.style.left = Math.random() * 100 + '%';
+    conf.style.top = '-10px';
+    conf.style.background = colors[Math.floor(Math.random() * colors.length)];
+    conf.style.borderRadius = Math.random() > 0.5 ? '50%' : '0';
+    conf.style.width = (5 + Math.random() * 8) + 'px';
+    conf.style.height = conf.style.width;
+    conf.style.duration = (2 + Math.random() * 2) + 's';
+    conf.style.animationDuration = (2 + Math.random() * 2) + 's';
+    conf.style.animationDelay = Math.random() * 0.5 + 's';
+    document.body.appendChild(conf);
+    setTimeout(() => conf.remove(), 5000);
+  }
+}
+
+// Haptic feedback
+function vibrate(pattern = [50, 30, 50]){
+  if(!hapticEnabled || !navigator.vibrate) return;
+  try { navigator.vibrate(pattern); } catch(e) {}
+}
+
+// Enhanced SFX with volume control
+const SFX_ORIGINAL = SFX;
+const SFXEnhanced = Object.assign({}, SFX, {
+  setVolume(vol){
+    volumeLevel = Math.max(0, Math.min(100, vol));
+    store(VOLUME_KEY, volumeLevel);
+    if(SFX.ctx && SFX.master) SFX.master.gain.value = volumeLevel / 100 * 0.85;
+  },
+  getVolume(){ return volumeLevel; }
+});
+Object.assign(SFX, SFXEnhanced);
+
+// Update existing game logic with enhancements
+// Statistics display
+function updateStatsDisplay(){
+  const stats = getStats();
+  $('statTotalGames').textContent = stats.gamesPlayed;
+  const totalWins = Object.values(stats.playerStats || {}).reduce((a,b) => a+b, 0);
+  const winRate = stats.gamesPlayed > 0 ? Math.round(totalWins / stats.gamesPlayed * 100) : 0;
+  $('statWinRate').textContent = winRate + '%';
+  $('statLongestTurn').textContent = stats.longestTurn + ' steps';
+  $('statMostColumns').textContent = stats.mostColumns;
+  
+  const playerWinsHTML = Object.entries(stats.playerStats || {})
+    .sort((a,b) => b[1] - a[1])
+    .map(([name, wins]) => `<div class="stat-item"><span class="stat-player-name">${name}</span><span class="stat-player-count">${wins}</span></div>`)
+    .join('');
+  $('statPlayerWins').innerHTML = playerWinsHTML || '<div style="text-align: center; color: var(--ink-soft); padding: 16px; font-size: .9rem;">No games played yet</div>';
+}
+
+// House rules setup
+function setupHouseRules(){
+  const rules = [
+    { id: 'soundEffects', name: 'Sound Effects', desc: 'Play audio feedback' },
+    { id: 'extendedRules', name: 'Extended Rules', desc: 'Additional game variants' },
+    { id: 'strictClaimingMode', name: 'Strict Mode', desc: 'Stricter column claiming' }
+  ];
+  
+  let html = '';
+  for(const rule of rules){
+    const checked = houseRules[rule.id] ? 'checked' : '';
+    html += `
+      <div class="rule-item">
+        <label class="rule-toggle">
+          <input type="checkbox" class="house-rule-toggle" data-rule="${rule.id}" ${checked}>
+        </label>
+        <div class="rule-label">
+          <span class="rule-label-text">${rule.name}</span>
+          <span class="rule-label-desc">${rule.desc}</span>
+        </div>
+      </div>
+    `;
+  }
+  $('houseRulesList').innerHTML = html;
+  
+  document.querySelectorAll('.house-rule-toggle').forEach(toggle => {
+    toggle.addEventListener('change', (e) => {
+      const rule = e.target.dataset.rule;
+      houseRules[rule] = e.target.checked;
+      store(HOUSE_RULES_KEY, JSON.stringify(houseRules));
+    });
+  });
+}
+
+// Modal controls
+$('settingsBtn').onclick = () => openModal('modalSettings');
+$('statsBtn').onclick = () => { updateStatsDisplay(); openModal('modalStats'); };
+$('rulesBtn').onclick = () => { setupHouseRules(); openModal('modalHouseRules'); };
+$('resetStats').onclick = () => {
+  if(confirm('Are you sure? This will reset all statistics.')) {
+    store(STATS_KEY, null);
+    updateStatsDisplay();
+  }
+};
+
+// Volume control
+$('volumeSlider').addEventListener('input', (e) => {
+  SFX.setVolume(+e.target.value);
+  $('volumeValue').textContent = e.target.value + '%';
+});
+
+// Haptic toggle
+$('hapticToggle').addEventListener('click', function(){
+  hapticEnabled = !hapticEnabled;
+  this.classList.toggle('on', hapticEnabled);
+  store(HAPTIC_KEY, hapticEnabled ? '1' : '0');
+  if(hapticEnabled) vibrate([50, 30, 50]);
+});
+
+// Confetti toggle
+$('confettiToggle').addEventListener('click', function(){
+  confettiEnabled = !confettiEnabled;
+  this.classList.toggle('on', confettiEnabled);
+  store(CONFETTI_KEY, confettiEnabled ? '1' : '0');
+});
+
+// Service worker registration (for offline support)
+if('serviceWorker' in navigator){
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/games/cant-stop/sw.js').catch(err => {
+      console.log('Service Worker registration failed:', err);
+    });
+  });
+}
+
 /* ---------- init ---------- */
 (function init(){
   // theme: stored preference, else follow the OS
   const savedTheme = load(THEME_KEY) || ((window.matchMedia && matchMedia('(prefers-color-scheme: dark)').matches) ? 'dark':'light');
   applyTheme(savedTheme);
+  
+  // Load settings
+  const savedVolume = load(VOLUME_KEY);
+  if(savedVolume) SFX.setVolume(+savedVolume);
+  hapticEnabled = load(HAPTIC_KEY) !== '0';
+  confettiEnabled = load(CONFETTI_KEY) !== '0';
+  const savedRules = load(HOUSE_RULES_KEY);
+  if(savedRules) try { houseRules = JSON.parse(savedRules); } catch(e) {}
+  
   // mute
   if(load(MUTE_KEY)==='1'){ SFX.setMuted(true); $('muteBtn').textContent='🔇'; $('muteBtn').classList.add('muted'); }
+  
+  // Update toggle states
+  if(hapticEnabled) $('hapticToggle').classList.add('on');
+  if(confettiEnabled) $('confettiToggle').classList.add('on');
+  $('volumeSlider').value = volumeLevel;
+  $('volumeValue').textContent = volumeLevel + '%';
+  
   // setup screen
   $('countRow').children[0].classList.add('sel');
   showSetup();
 })();
 </script>
+
+  <!-- ===================== SETTINGS MODAL ===================== -->
+  <div id="modalSettings" class="modal">
+    <div class="modal-card">
+      <h2>Settings</h2>
+      <div style="margin-bottom: 16px;">
+        <h3 style="font-family: Fredoka; font-size: .9rem; text-transform: uppercase; letter-spacing: 1px; color: var(--ink-soft); margin: 0 0 10px;">Sound</h3>
+        <div class="volume-control">
+          <label>Volume</label>
+          <input type="range" id="volumeSlider" class="volume-slider" min="0" max="100" value="85">
+          <span class="volume-value" id="volumeValue">85%</span>
+        </div>
+      </div>
+      <div style="margin-bottom: 16px;">
+        <h3 style="font-family: Fredoka; font-size: .9rem; text-transform: uppercase; letter-spacing: 1px; color: var(--ink-soft); margin: 0 0 10px;">Haptics</h3>
+        <div class="rule-item">
+          <label class="rule-toggle" id="hapticToggle" style="position: relative;">
+            <input type="checkbox" style="display: none;" checked>
+          </label>
+          <div class="rule-label">
+            <span class="rule-label-text">Haptic Feedback</span>
+            <span class="rule-label-desc">Vibrate on actions</span>
+          </div>
+        </div>
+      </div>
+      <div style="margin-bottom: 16px;">
+        <h3 style="font-family: Fredoka; font-size: .9rem; text-transform: uppercase; letter-spacing: 1px; color: var(--ink-soft); margin: 0 0 10px;">Animations</h3>
+        <div class="rule-item">
+          <label class="rule-toggle" id="confettiToggle" style="position: relative;">
+            <input type="checkbox" style="display: none;" checked>
+          </label>
+          <div class="rule-label">
+            <span class="rule-label-text">Celebration Effects</span>
+            <span class="rule-label-desc">Confetti when winning</span>
+          </div>
+        </div>
+      </div>
+      <div class="modal-actions">
+        <button class="big" data-close style="flex: 1;">Done</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===================== STATISTICS MODAL ===================== -->
+  <div id="modalStats" class="modal">
+    <div class="modal-card">
+      <h2>Statistics</h2>
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-label">Total Games</div>
+          <div class="stat-value" id="statTotalGames">0</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Win Rate</div>
+          <div class="stat-value" id="statWinRate">0%</div>
+        </div>
+      </div>
+      <div style="margin-bottom: 12px;">
+        <h3 style="font-family: Fredoka; font-size: .9rem; color: var(--ink-soft); margin: 0 0 8px;">Wins by Player</h3>
+        <div class="stat-list" id="statPlayerWins"></div>
+      </div>
+      <div style="margin-bottom: 12px;">
+        <h3 style="font-family: Fredoka; font-size: .9rem; color: var(--ink-soft); margin: 0 0 8px;">Personal Records</h3>
+        <div class="stat-list">
+          <div class="stat-item">
+            <span>Longest Turn</span>
+            <span class="stat-player-count" id="statLongestTurn">0 steps</span>
+          </div>
+          <div class="stat-item">
+            <span>Most Columns</span>
+            <span class="stat-player-count" id="statMostColumns">0</span>
+          </div>
+        </div>
+      </div>
+      <div class="modal-actions">
+        <button class="big alt" id="resetStats" style="flex: 1; margin-bottom: 8px;">Reset Stats</button>
+        <button class="big" data-close style="flex: 1;">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===================== HOUSE RULES MODAL ===================== -->
+  <div id="modalHouseRules" class="modal">
+    <div class="modal-card">
+      <h2>House Rules</h2>
+      <p style="color: var(--ink-soft); margin-bottom: 16px; font-size: .9rem;">Customize your game experience:</p>
+      <div id="houseRulesList"></div>
+      <div class="modal-actions">
+        <button class="big" data-close style="flex: 1;">Close</button>
+      </div>
+    </div>
+  </div>
 </body>
 </html>
