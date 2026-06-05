@@ -170,11 +170,6 @@
   .runner{position:absolute; inset:-2px; border-radius:8px; border:3px dashed currentColor; animation:pulse 1.1s ease-in-out infinite;}
   @keyframes pulse{0%,100%{opacity:1;}50%{opacity:.4;}}
   .runner-dot{width:14px; height:14px; border-radius:50%; box-shadow:0 0 0 2px var(--panel), inset 0 0 0 2px rgba(0,0,0,.22);}
-  /* claim animation */
-  .col.just-claimed .col-head{animation:claimPop .6s ease;}
-  .col.just-claimed{animation:claimGlow 1.3s ease;}
-  @keyframes claimPop{0%{transform:scale(.5) rotate(-8deg);}55%{transform:scale(1.18) rotate(3deg);}100%{transform:scale(1);}}
-  @keyframes claimGlow{0%,100%{filter:none;}30%{filter:drop-shadow(0 0 12px var(--turn));}}
 
   /* play card */
   .play-card{padding:16px;}
@@ -349,13 +344,13 @@
     border-radius: 13px; cursor: pointer; transition: .2s; position: relative;
     flex: none;
   }
-  .rule-toggle:checked { background: var(--accent); }
+  .rule-toggle.on { background: var(--accent); }
   .rule-toggle::after {
     content: ''; position: absolute; width: 22px; height: 22px;
     background: white; border-radius: 11px; top: 2px; left: 2px;
     transition: left .2s;
   }
-  .rule-toggle:checked::after { left: 16px; }
+  .rule-toggle.on::after { left: 16px; }
   .rule-label { flex: 1; }
   .rule-label-text { font-family: "Fredoka"; font-weight: 600; font-size: .95rem; display: block; }
   .rule-label-desc { font-size: .8rem; color: var(--ink-soft); margin-top: 2px; }
@@ -368,8 +363,7 @@
     <div class="top-btns">
       <button class="ghost-btn icon-btn" id="howBtn" aria-label="How to play" title="How to play">?</button>
       <button class="ghost-btn icon-btn" id="themeBtn" aria-label="Theme" title="Light / dark">🌙</button>
-      <button class="ghost-btn icon-btn" id="statsBtn" aria-label="Statistics" title="Statistics" style="display:none;">📊</button>
-      <button class="ghost-btn icon-btn" id="rulesBtn" aria-label="House rules" title="House rules" style="display:none;">⚙️</button>
+      <button class="ghost-btn icon-btn" id="statsBtn" aria-label="Statistics" title="Statistics">📊</button>
       <button class="ghost-btn icon-btn" id="settingsBtn" aria-label="Settings" title="Settings">⚡</button>
       <button class="ghost-btn icon-btn" id="muteBtn" aria-label="Sound" title="Sound">🔊</button>
       <button class="ghost-btn" id="newGameBtn" style="display:none;">New Game</button>
@@ -461,6 +455,82 @@
     <div class="ho-name" id="handoffName">—</div>
     <button class="big" id="handoffReady">I'm ready →</button>
     <div class="ho-hint">Tap when this player is holding the phone.</div>
+  </div>
+</div>
+
+<!-- ===================== SETTINGS MODAL ===================== -->
+<div id="modalSettings" class="modal">
+  <div class="modal-card">
+    <h2>Settings</h2>
+    <div style="margin-bottom: 16px;">
+      <h3 style="font-family: Fredoka; font-size: .9rem; text-transform: uppercase; letter-spacing: 1px; color: var(--ink-soft); margin: 0 0 10px;">Sound</h3>
+      <div class="volume-control">
+        <label>Volume</label>
+        <input type="range" id="volumeSlider" class="volume-slider" min="0" max="100" value="85">
+        <span class="volume-value" id="volumeValue">85%</span>
+      </div>
+    </div>
+    <div style="margin-bottom: 16px;">
+      <h3 style="font-family: Fredoka; font-size: .9rem; text-transform: uppercase; letter-spacing: 1px; color: var(--ink-soft); margin: 0 0 10px;">Haptics</h3>
+      <div class="rule-item">
+        <label class="rule-toggle" id="hapticToggle" role="switch" tabindex="0" aria-label="Haptic feedback"></label>
+        <div class="rule-label">
+          <span class="rule-label-text">Haptic Feedback</span>
+          <span class="rule-label-desc">Vibrate on actions (if supported)</span>
+        </div>
+      </div>
+    </div>
+    <div style="margin-bottom: 16px;">
+      <h3 style="font-family: Fredoka; font-size: .9rem; text-transform: uppercase; letter-spacing: 1px; color: var(--ink-soft); margin: 0 0 10px;">Animations</h3>
+      <div class="rule-item">
+        <label class="rule-toggle" id="confettiToggle" role="switch" tabindex="0" aria-label="Celebration effects"></label>
+        <div class="rule-label">
+          <span class="rule-label-text">Celebration Effects</span>
+          <span class="rule-label-desc">Confetti when winning</span>
+        </div>
+      </div>
+    </div>
+    <div class="modal-actions">
+      <button class="big" data-close style="flex: 1;">Done</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== STATISTICS MODAL ===================== -->
+<div id="modalStats" class="modal">
+  <div class="modal-card">
+    <h2>Statistics</h2>
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-label">Total Games</div>
+        <div class="stat-value" id="statTotalGames">0</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Win Rate</div>
+        <div class="stat-value" id="statWinRate">0%</div>
+      </div>
+    </div>
+    <div style="margin-bottom: 12px;">
+      <h3 style="font-family: Fredoka; font-size: .9rem; color: var(--ink-soft); margin: 0 0 8px;">Wins by Player</h3>
+      <div class="stat-list" id="statPlayerWins"></div>
+    </div>
+    <div style="margin-bottom: 12px;">
+      <h3 style="font-family: Fredoka; font-size: .9rem; color: var(--ink-soft); margin: 0 0 8px;">Personal Records</h3>
+      <div class="stat-list">
+        <div class="stat-item">
+          <span>Longest Turn</span>
+          <span class="stat-player-count" id="statLongestTurn">0 steps</span>
+        </div>
+        <div class="stat-item">
+          <span>Most Columns</span>
+          <span class="stat-player-count" id="statMostColumns">0</span>
+        </div>
+      </div>
+    </div>
+    <div class="modal-actions">
+      <button class="big alt" id="resetStats" style="flex: 1; margin-bottom: 8px;">Reset Stats</button>
+      <button class="big" data-close style="flex: 1;">Close</button>
+    </div>
   </div>
 </div>
 
@@ -621,14 +691,14 @@ function stepsAtStake(s){
    ----- UNCHANGED from the verified version -----
    ============================================================ */
 const SFX = (function(){
-  let ctx=null, master=null, muted=false;
+  let ctx=null, master=null, muted=false, volFrac=1;   // volFrac: 0..1 user volume
   function ensure(){
     if(!ctx){
       const AC = window.AudioContext || window.webkitAudioContext;
       if(!AC) return null;
       ctx = new AC();
       master = ctx.createGain();
-      master.gain.value = 0.85;
+      master.gain.value = 0.85 * volFrac;
       master.connect(ctx.destination);
     }
     if(ctx.state==='suspended') ctx.resume();
@@ -673,6 +743,11 @@ const SFX = (function(){
   return {
     setMuted(m){ muted=m; },
     isMuted(){ return muted; },
+    setVolume(pct){                                   // pct: 0..100
+      volFrac = Math.max(0, Math.min(100, pct)) / 100;
+      if(master) master.gain.value = 0.85 * volFrac;
+    },
+    getVolume(){ return Math.round(volFrac*100); },
     unlock(){ if(!muted) ensure(); },
     roll(){ if(muted||!ensure())return; const t=ctx.currentTime;
       for(let i=0;i<8;i++) noise(t+i*0.045+Math.random()*0.012, 0.04, 0.22, 500+Math.random()*1500); },
@@ -734,6 +809,8 @@ function animateDiceFaces(){
   dice.forEach((d,i)=>{ d.classList.remove('roll'); void d.offsetWidth; d.style.animationDelay=(i*0.05)+'s'; d.classList.add('roll'); });
   let frame=0; const frames=7;
   const iv=setInterval(()=>{
+    // Bail out if the game was reset/ended while the animation was still running.
+    if(!state || !document.body.contains(dice[0])){ clearInterval(iv); return; }
     frame++;
     dice.forEach(d=> setDieFaces(d, 1+Math.floor(Math.random()*6)));
     if(frame>=frames){ clearInterval(iv); dice.forEach((d,i)=> setDieFaces(d, state.dice[i])); }
@@ -969,10 +1046,17 @@ function renderBannerAndActions(){
 
 function onStop(){
   const before = COLS.filter(c=>state.claimed[c]!=null);
+  const bankedSteps = stepsAtStake(state);   // steps gained this turn (temp clears in doStop)
   doStop(state);                       // logic untouched (advances turn / sets winner)
   const gained = COLS.filter(c=>state.claimed[c]!=null && !before.includes(c));
   recentClaims = gained;
-  
+
+  // Record "longest turn" personal best (real games only)
+  if(!inTutorial && bankedSteps > 0){
+    const stats = getStats();
+    if(bankedSteps > (stats.longestTurn||0)){ stats.longestTurn = bankedSteps; saveStats(stats); }
+  }
+
   // Haptic feedback
   if(gained.length) {
     vibrate([30, 20, 30, 20, 30]); // Column claim pattern
@@ -1082,17 +1166,11 @@ $('confirmNew').onclick=()=>{
    ENHANCED FEATURES: Stats, Confetti, Haptics, Volume, etc.
    ============================================================ */
 const STATS_KEY = 'cs_stats', VOLUME_KEY = 'cs_volume', HAPTIC_KEY = 'cs_haptic', CONFETTI_KEY = 'cs_confetti';
-const HOUSE_RULES_KEY = 'cs_houseRules';
 
 // Settings state
 let volumeLevel = 85;
 let hapticEnabled = true;
 let confettiEnabled = true;
-let houseRules = {
-  soundEffects: true,
-  extendedRules: false,
-  strictClaimingMode: false
-};
 
 // Statistics
 function getStats(){
@@ -1137,7 +1215,6 @@ function createConfetti(){
     conf.style.borderRadius = Math.random() > 0.5 ? '50%' : '0';
     conf.style.width = (5 + Math.random() * 8) + 'px';
     conf.style.height = conf.style.width;
-    conf.style.duration = (2 + Math.random() * 2) + 's';
     conf.style.animationDuration = (2 + Math.random() * 2) + 's';
     conf.style.animationDelay = Math.random() * 0.5 + 's';
     document.body.appendChild(conf);
@@ -1151,17 +1228,8 @@ function vibrate(pattern = [50, 30, 50]){
   try { navigator.vibrate(pattern); } catch(e) {}
 }
 
-// Enhanced SFX with volume control
-const SFX_ORIGINAL = SFX;
-const SFXEnhanced = Object.assign({}, SFX, {
-  setVolume(vol){
-    volumeLevel = Math.max(0, Math.min(100, vol));
-    store(VOLUME_KEY, volumeLevel);
-    if(SFX.ctx && SFX.master) SFX.master.gain.value = volumeLevel / 100 * 0.85;
-  },
-  getVolume(){ return volumeLevel; }
-});
-Object.assign(SFX, SFXEnhanced);
+// Enhanced SFX volume control is implemented directly inside the SFX engine
+// (see SFX.setVolume / SFX.getVolume above).
 
 // Update existing game logic with enhancements
 // Statistics display
@@ -1182,43 +1250,9 @@ function updateStatsDisplay(){
 }
 
 // House rules setup
-function setupHouseRules(){
-  const rules = [
-    { id: 'soundEffects', name: 'Sound Effects', desc: 'Play audio feedback' },
-    { id: 'extendedRules', name: 'Extended Rules', desc: 'Additional game variants' },
-    { id: 'strictClaimingMode', name: 'Strict Mode', desc: 'Stricter column claiming' }
-  ];
-  
-  let html = '';
-  for(const rule of rules){
-    const checked = houseRules[rule.id] ? 'checked' : '';
-    html += `
-      <div class="rule-item">
-        <label class="rule-toggle">
-          <input type="checkbox" class="house-rule-toggle" data-rule="${rule.id}" ${checked}>
-        </label>
-        <div class="rule-label">
-          <span class="rule-label-text">${rule.name}</span>
-          <span class="rule-label-desc">${rule.desc}</span>
-        </div>
-      </div>
-    `;
-  }
-  $('houseRulesList').innerHTML = html;
-  
-  document.querySelectorAll('.house-rule-toggle').forEach(toggle => {
-    toggle.addEventListener('change', (e) => {
-      const rule = e.target.dataset.rule;
-      houseRules[rule] = e.target.checked;
-      store(HOUSE_RULES_KEY, JSON.stringify(houseRules));
-    });
-  });
-}
-
 // Modal controls
 $('settingsBtn').onclick = () => openModal('modalSettings');
 $('statsBtn').onclick = () => { updateStatsDisplay(); openModal('modalStats'); };
-$('rulesBtn').onclick = () => { setupHouseRules(); openModal('modalHouseRules'); };
 $('resetStats').onclick = () => {
   if(confirm('Are you sure? This will reset all statistics.')) {
     store(STATS_KEY, null);
@@ -1228,8 +1262,11 @@ $('resetStats').onclick = () => {
 
 // Volume control
 $('volumeSlider').addEventListener('input', (e) => {
-  SFX.setVolume(+e.target.value);
-  $('volumeValue').textContent = e.target.value + '%';
+  const v = +e.target.value;
+  volumeLevel = v;
+  SFX.setVolume(v);
+  store(VOLUME_KEY, v);
+  $('volumeValue').textContent = v + '%';
 });
 
 // Service worker registration (for offline support)
@@ -1249,18 +1286,17 @@ if('serviceWorker' in navigator){
   
   // Load settings
   const savedVolume = load(VOLUME_KEY);
-  if(savedVolume) SFX.setVolume(+savedVolume);
+  if(savedVolume != null && !isNaN(+savedVolume)) volumeLevel = Math.max(0, Math.min(100, +savedVolume));
+  SFX.setVolume(volumeLevel);
   hapticEnabled = load(HAPTIC_KEY) !== '0';
   confettiEnabled = load(CONFETTI_KEY) !== '0';
-  const savedRules = load(HOUSE_RULES_KEY);
-  if(savedRules) try { houseRules = JSON.parse(savedRules); } catch(e) {}
   
   // mute
   if(load(MUTE_KEY)==='1'){ SFX.setMuted(true); $('muteBtn').textContent='🔇'; $('muteBtn').classList.add('muted'); }
   
   // Update toggle states
-  if(hapticEnabled) $('hapticToggle').classList.add('on');
-  if(confettiEnabled) $('confettiToggle').classList.add('on');
+  $('hapticToggle').classList.toggle('on', hapticEnabled);
+  $('confettiToggle').classList.toggle('on', confettiEnabled);
   $('volumeSlider').value = volumeLevel;
   $('volumeValue').textContent = volumeLevel + '%';
   
@@ -1297,96 +1333,5 @@ if('serviceWorker' in navigator){
 })();
 </script>
 
-  <!-- ===================== SETTINGS MODAL ===================== -->
-  <div id="modalSettings" class="modal">
-    <div class="modal-card">
-      <h2>Settings</h2>
-      <div style="margin-bottom: 16px;">
-        <h3 style="font-family: Fredoka; font-size: .9rem; text-transform: uppercase; letter-spacing: 1px; color: var(--ink-soft); margin: 0 0 10px;">Sound</h3>
-        <div class="volume-control">
-          <label>Volume</label>
-          <input type="range" id="volumeSlider" class="volume-slider" min="0" max="100" value="85">
-          <span class="volume-value" id="volumeValue">85%</span>
-        </div>
-      </div>
-      <div style="margin-bottom: 16px;">
-        <h3 style="font-family: Fredoka; font-size: .9rem; text-transform: uppercase; letter-spacing: 1px; color: var(--ink-soft); margin: 0 0 10px;">Haptics</h3>
-        <div class="rule-item">
-          <label class="rule-toggle" id="hapticToggle" style="position: relative;">
-            <input type="checkbox" style="display: none;" checked>
-          </label>
-          <div class="rule-label">
-            <span class="rule-label-text">Haptic Feedback</span>
-            <span class="rule-label-desc">Vibrate on actions</span>
-          </div>
-        </div>
-      </div>
-      <div style="margin-bottom: 16px;">
-        <h3 style="font-family: Fredoka; font-size: .9rem; text-transform: uppercase; letter-spacing: 1px; color: var(--ink-soft); margin: 0 0 10px;">Animations</h3>
-        <div class="rule-item">
-          <label class="rule-toggle" id="confettiToggle" style="position: relative;">
-            <input type="checkbox" style="display: none;" checked>
-          </label>
-          <div class="rule-label">
-            <span class="rule-label-text">Celebration Effects</span>
-            <span class="rule-label-desc">Confetti when winning</span>
-          </div>
-        </div>
-      </div>
-      <div class="modal-actions">
-        <button class="big" data-close style="flex: 1;">Done</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- ===================== STATISTICS MODAL ===================== -->
-  <div id="modalStats" class="modal">
-    <div class="modal-card">
-      <h2>Statistics</h2>
-      <div class="stats-grid">
-        <div class="stat-card">
-          <div class="stat-label">Total Games</div>
-          <div class="stat-value" id="statTotalGames">0</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-label">Win Rate</div>
-          <div class="stat-value" id="statWinRate">0%</div>
-        </div>
-      </div>
-      <div style="margin-bottom: 12px;">
-        <h3 style="font-family: Fredoka; font-size: .9rem; color: var(--ink-soft); margin: 0 0 8px;">Wins by Player</h3>
-        <div class="stat-list" id="statPlayerWins"></div>
-      </div>
-      <div style="margin-bottom: 12px;">
-        <h3 style="font-family: Fredoka; font-size: .9rem; color: var(--ink-soft); margin: 0 0 8px;">Personal Records</h3>
-        <div class="stat-list">
-          <div class="stat-item">
-            <span>Longest Turn</span>
-            <span class="stat-player-count" id="statLongestTurn">0 steps</span>
-          </div>
-          <div class="stat-item">
-            <span>Most Columns</span>
-            <span class="stat-player-count" id="statMostColumns">0</span>
-          </div>
-        </div>
-      </div>
-      <div class="modal-actions">
-        <button class="big alt" id="resetStats" style="flex: 1; margin-bottom: 8px;">Reset Stats</button>
-        <button class="big" data-close style="flex: 1;">Close</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- ===================== HOUSE RULES MODAL ===================== -->
-  <div id="modalHouseRules" class="modal">
-    <div class="modal-card">
-      <h2>House Rules</h2>
-      <p style="color: var(--ink-soft); margin-bottom: 16px; font-size: .9rem;">Customize your game experience:</p>
-      <div id="houseRulesList"></div>
-      <div class="modal-actions">
-        <button class="big" data-close style="flex: 1;">Close</button>
-      </div>
-    </div>
-  </div>
 </body>
 </html>
