@@ -1,0 +1,971 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<title>Can't Stop — Local Multiplayer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  /* ===================== THEME TOKENS ===================== */
+  :root{
+    --bg:#f3ece0; --panel:#fffdf8; --ink:#2c2620; --ink-soft:#6b6354;
+    --line:#e3d9c6; --accent:#1f6f5c; --accent-dark:#185647;
+    --alt:#b9462f; --alt-dark:#8d3422;
+    --cell:#f7f1e6; --cell-top:#efe7d4; --cell-border:#ece2cf;
+    --head-bg:#f0e9da; --score-bg:#faf6ee; --input-bg:#ffffff;
+    --die-bg:#ffffff; --pip:#2c2620;
+    --turn:#1f6f5c;          /* active player's color, set each render */
+    --shadow:0 6px 18px rgba(60,48,30,.12);
+    --radius:16px;
+  }
+  html[data-theme="dark"]{
+    --bg:#1a1714; --panel:#262220; --ink:#f1ebe0; --ink-soft:#a79e90;
+    --line:#3a342d; --accent:#3fae90; --accent-dark:#2c8670;
+    --alt:#d76a52; --alt-dark:#a44735;
+    --cell:#2f2a25; --cell-top:#39322b; --cell-border:#403930;
+    --head-bg:#35302a; --score-bg:#2f2a25; --input-bg:#2f2a25;
+    --die-bg:#33302b; --pip:#f1ebe0;
+    --shadow:0 6px 18px rgba(0,0,0,.4);
+  }
+  *{box-sizing:border-box; -webkit-tap-highlight-color:transparent;}
+  html,body{margin:0;}
+  body{
+    font-family:"DM Sans",system-ui,sans-serif;
+    background:radial-gradient(120% 80% at 50% -10%, color-mix(in srgb,var(--panel) 60%, var(--bg)) 0%, var(--bg) 60%);
+    color:var(--ink); min-height:100vh; min-height:100dvh; padding:14px;
+    -webkit-text-size-adjust:100%; transition:background .25s,color .25s;
+  }
+  .board,.dice,.choices,.controls,.status,.scores,.col-head,.choice,.big,.ghost-btn,.coach{
+    user-select:none; -webkit-user-select:none;
+  }
+  h1,h2,h3,.f{font-family:"Fredoka",system-ui,sans-serif;}
+  .wrap{max-width:1120px; margin:0 auto;}
+  .card{background:var(--panel); border:1px solid var(--line); border-radius:var(--radius); box-shadow:var(--shadow);}
+
+  /* ===================== HEADER ===================== */
+  .top{display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:12px;}
+  .top h1{font-size:1.6rem; margin:0; letter-spacing:.3px;}
+  .top h1 .dot{color:var(--accent);}
+  .top-btns{display:flex; gap:8px; align-items:center;}
+  .ghost-btn{
+    font-family:"Fredoka"; font-size:1rem; border:2px solid var(--line);
+    background:var(--panel); color:var(--ink-soft); padding:10px 16px;
+    border-radius:999px; cursor:pointer; line-height:1;
+  }
+  .ghost-btn:active{transform:scale(.95);}
+  .icon-btn{font-size:1.25rem; padding:10px 13px; min-width:46px;}
+  .icon-btn.muted{opacity:.65; border-style:dashed;}
+
+  /* ===================== BIG BUTTONS ===================== */
+  .big{
+    width:100%; font-family:"Fredoka"; font-weight:600; font-size:1.6rem;
+    padding:22px 0; border:none; border-radius:18px; cursor:pointer; min-height:66px;
+    color:#fff; background:var(--accent); box-shadow:0 6px 0 var(--accent-dark); transition:transform .08s,box-shadow .08s;
+  }
+  .big:active{transform:translateY(4px); box-shadow:0 2px 0 var(--accent-dark);}
+  .big.alt{background:var(--alt); box-shadow:0 6px 0 var(--alt-dark);}
+  .big.alt:active{box-shadow:0 2px 0 var(--alt-dark);}
+  .big.ghost2{background:transparent; color:var(--accent); box-shadow:inset 0 0 0 2px var(--accent); min-height:56px; font-size:1.25rem; padding:16px 0;}
+  .big.ghost2:active{transform:translateY(2px);}
+
+  /* ===================== SETUP ===================== */
+  #setup{padding:24px; max-width:560px; margin:0 auto;}
+  #setup h2{margin:0 0 4px; font-size:1.7rem;}
+  .sub{color:var(--ink-soft); margin:0 0 18px;}
+  .resume-wrap{margin-bottom:20px;}
+  .resume-wrap .or{text-align:center; color:var(--ink-soft); font-size:.85rem; margin:12px 0 2px; text-transform:uppercase; letter-spacing:1px;}
+  .count-row{display:flex; gap:10px; margin-bottom:18px;}
+  .count-row button{
+    flex:1; font-family:"Fredoka"; font-size:1.3rem; padding:18px 0;
+    border-radius:14px; border:2px solid var(--line); background:var(--score-bg);
+    color:var(--ink); cursor:pointer; transition:.15s;
+  }
+  .count-row button.sel{border-color:var(--accent); background:color-mix(in srgb,var(--accent) 14%, var(--panel)); color:var(--accent);}
+  .name-list{display:flex; flex-direction:column; gap:10px; margin-bottom:20px;}
+  .name-item{display:flex; align-items:center; gap:12px;}
+  .swatch{width:30px; height:30px; border-radius:50%; flex:none; box-shadow:inset 0 0 0 2px rgba(0,0,0,.12); display:flex; align-items:center; justify-content:center; color:#fff; font-family:"Fredoka"; font-weight:700; font-size:.9rem;}
+  .name-item input{
+    flex:1; font-family:"DM Sans"; font-size:1.1rem; padding:14px 16px;
+    border:2px solid var(--line); border-radius:12px; background:var(--input-bg); color:var(--ink);
+  }
+  .name-item input:focus{outline:none; border-color:var(--accent);}
+  #startBtn{margin-bottom:12px;}
+
+  /* ===================== GAME LAYOUT ===================== */
+  #game{display:none;}
+  .game-grid{
+    display:grid; gap:14px; grid-template-columns:1fr;
+    grid-template-areas:"status" "board" "play" "scores";
+  }
+  .a-status{grid-area:status;} .a-board{grid-area:board;}
+  .a-play{grid-area:play;} .a-scores{grid-area:scores;}
+  /* tablet / desktop: board beside the controls */
+  @media(min-width:860px){
+    .game-grid{
+      grid-template-columns:minmax(0,1fr) 390px; align-items:start;
+      grid-template-areas:"board status" "board play" "board scores";
+    }
+    .a-board{align-self:stretch;}
+  }
+  @media(min-width:1100px){ .game-grid{grid-template-columns:minmax(0,1fr) 430px;} }
+
+  /* status */
+  .status{
+    padding:18px 20px; display:flex; align-items:center; gap:14px;
+    border-left:9px solid var(--turn);
+    background:linear-gradient(90deg, color-mix(in srgb,var(--turn) 10%, var(--panel)) 0%, var(--panel) 60%);
+    transition:border-color .25s;
+  }
+  .turn-chip{width:30px; height:30px; border-radius:50%; flex:none; box-shadow:inset 0 0 0 3px rgba(255,255,255,.55), 0 0 0 2px rgba(0,0,0,.12); display:flex; align-items:center; justify-content:center; color:#fff; font-family:"Fredoka"; font-weight:700;}
+  .who-wrap{min-width:0;}
+  .now-label{font-family:"Fredoka"; font-size:.7rem; font-weight:600; letter-spacing:1.5px; text-transform:uppercase; color:var(--turn);}
+  .status .who{font-family:"Fredoka"; font-size:1.6rem; font-weight:600; line-height:1.05;}
+  .status .msg{color:var(--ink-soft); font-size:.98rem; margin-top:2px;}
+  .status .right{margin-left:auto; text-align:right; font-size:.78rem; color:var(--ink-soft); flex:none;}
+  .status .right b{font-family:"Fredoka"; font-size:1.3rem; color:var(--ink); display:block;}
+
+  /* board */
+  .board{padding:14px 10px 16px; overflow-x:auto;}
+  .cols{display:flex; gap:5px; justify-content:center; width:100%; margin:0 auto;}
+  .col{flex:1 1 0; min-width:0; display:flex; flex-direction:column; align-items:center;}
+  .col-head{
+    font-family:"Fredoka"; font-weight:600; font-size:1.05rem; width:100%; text-align:center;
+    padding:5px 0; margin-bottom:5px; border-radius:9px; background:var(--head-bg); color:var(--ink);
+  }
+  .col-head .hstar{font-size:.85em;}
+  .col.claimed .col-head{color:#fff;}
+  /* legal-move highlight (current player's color) */
+  .col.legal .col-head{background:var(--turn); color:#fff; box-shadow:0 0 0 2px var(--panel), 0 0 0 4px var(--turn);}
+  .col.legal .cell{border-color:var(--turn);}
+  .col.preview .col-head{transform:scale(1.12);}
+  .col.preview .cell{border-color:var(--turn); background:color-mix(in srgb,var(--turn) 18%, var(--cell)); box-shadow:inset 0 0 0 1px var(--turn);}
+  .track{display:flex; flex-direction:column-reverse; gap:3px; width:100%;}
+  .cell{
+    position:relative; width:100%; aspect-ratio:1/1; min-height:16px; max-height:34px;
+    background:var(--cell); border:1px solid var(--cell-border); border-radius:6px;
+    display:flex; align-items:center; justify-content:center; flex-wrap:wrap; gap:2px;
+  }
+  .cell.top{border-color:color-mix(in srgb,var(--ink) 20%, var(--cell-border)); background:var(--cell-top);}
+  .col.claimed .cell{background:var(--cell-top); opacity:.5;}
+  .claim-badge{position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; color:#fff; font-family:"Fredoka"; font-weight:700; line-height:1;}
+  .claim-badge .cstar{font-size:1rem;} .claim-badge .cnum{font-size:.62rem;}
+  .pmark{width:13px; height:13px; border-radius:50%; box-shadow:inset 0 0 0 1.5px rgba(0,0,0,.28); display:flex; align-items:center; justify-content:center; color:#fff; font-size:8px; font-weight:700; font-family:"Fredoka";}
+  .runner{position:absolute; inset:-2px; border-radius:8px; border:3px dashed currentColor; animation:pulse 1.1s ease-in-out infinite;}
+  @keyframes pulse{0%,100%{opacity:1;}50%{opacity:.4;}}
+  .runner-dot{width:14px; height:14px; border-radius:50%; box-shadow:0 0 0 2px var(--panel), inset 0 0 0 2px rgba(0,0,0,.22);}
+  /* claim animation */
+  .col.just-claimed .col-head{animation:claimPop .6s ease;}
+  .col.just-claimed{animation:claimGlow 1.3s ease;}
+  @keyframes claimPop{0%{transform:scale(.5) rotate(-8deg);}55%{transform:scale(1.18) rotate(3deg);}100%{transform:scale(1);}}
+  @keyframes claimGlow{0%,100%{filter:none;}30%{filter:drop-shadow(0 0 12px var(--turn));}}
+
+  /* play card */
+  .play-card{padding:16px;}
+  .dice{display:flex; gap:12px; justify-content:center; margin:6px 0 16px;}
+  .die{
+    width:62px; height:62px; background:var(--die-bg); border-radius:15px;
+    box-shadow:var(--shadow), inset 0 0 0 1px var(--line);
+    display:grid; grid-template-columns:repeat(3,1fr); grid-template-rows:repeat(3,1fr); padding:10px; gap:2px;
+  }
+  .die.used{opacity:.85;} .die.used .pip{background:var(--ink-soft);}
+  .pip{border-radius:50%; align-self:center; justify-self:center; width:9px; height:9px; background:var(--pip); visibility:hidden;}
+  .pip.on{visibility:visible;}
+  .die.roll{animation:tumble .5s cubic-bezier(.34,1.56,.64,1);}
+  @keyframes tumble{0%{transform:translateY(-7px) rotate(-20deg) scale(.78);}45%{transform:translateY(3px) rotate(12deg) scale(1.08);}72%{transform:rotate(-5deg) scale(.97);}100%{transform:none;}}
+
+  .prompt{font-family:"Fredoka"; font-size:1.2rem; text-align:center; margin:2px 0 12px;}
+  .choices{display:flex; flex-wrap:wrap; gap:12px; justify-content:center;}
+  .choice{
+    font-family:"Fredoka"; font-weight:600; font-size:1.4rem; color:#fff;
+    border:none; border-radius:16px; padding:18px 24px; cursor:pointer; min-width:116px; min-height:62px;
+    box-shadow:0 5px 0 rgba(0,0,0,.18); transition:transform .08s,box-shadow .08s;
+  }
+  .choice:active{transform:translateY(3px); box-shadow:0 2px 0 rgba(0,0,0,.18);}
+  .choice small{display:block; font-family:"DM Sans"; font-weight:500; font-size:.72rem; opacity:.9; margin-top:2px;}
+
+  .controls{display:flex; flex-direction:column; gap:10px;}
+  .controls .row{display:flex; gap:10px;}
+  .controls .row .big{flex:1; font-size:1.45rem;}
+  .risk{
+    text-align:center; font-size:.92rem; color:var(--alt); background:color-mix(in srgb,var(--alt) 12%, var(--panel));
+    border:1px solid color-mix(in srgb,var(--alt) 28%, var(--panel)); border-radius:12px; padding:9px 12px;
+  }
+  .risk b{font-family:"Fredoka";}
+
+  .banner{padding:16px; text-align:center; border-radius:14px; margin-bottom:12px; font-family:"Fredoka";}
+  .banner.bust{background:color-mix(in srgb,var(--alt) 16%, var(--panel)); color:var(--alt); border:1px solid color-mix(in srgb,var(--alt) 30%, var(--panel));}
+  .banner.win{background:color-mix(in srgb,var(--accent) 14%, var(--panel)); color:var(--accent); border:1px solid color-mix(in srgb,var(--accent) 30%, var(--panel)); font-size:1.4rem;}
+  .banner small{display:block; font-family:"DM Sans"; font-weight:500; opacity:.85; margin-top:4px; font-size:.88rem;}
+
+  /* coach (tutorial) */
+  .coach{display:none; background:color-mix(in srgb,var(--accent) 12%, var(--panel)); border:1px solid color-mix(in srgb,var(--accent) 30%, var(--panel)); border-radius:14px; padding:14px; margin-bottom:14px;}
+  .coach-txt{font-size:1rem; line-height:1.5; margin-bottom:10px;}
+  .coach-txt b{color:var(--accent);}
+  .coach-end{font-family:"Fredoka"; background:transparent; border:2px solid var(--accent); color:var(--accent); border-radius:999px; padding:8px 16px; cursor:pointer; font-size:.9rem;}
+
+  /* scoreboard */
+  .scores{display:flex; flex-wrap:wrap; gap:8px; padding:14px;}
+  .score{display:flex; align-items:center; gap:8px; font-size:.95rem; background:var(--score-bg); border:1px solid var(--line); padding:8px 13px; border-radius:999px;}
+  .score .sw{width:18px; height:18px; border-radius:50%; display:flex; align-items:center; justify-content:center; color:#fff; font-size:.62rem; font-weight:700; font-family:"Fredoka";}
+  .score b{font-family:"Fredoka";}
+
+  /* modals + overlays */
+  .modal,.overlay{position:fixed; inset:0; z-index:50; display:none; align-items:center; justify-content:center; padding:18px; background:rgba(20,15,10,.55); backdrop-filter:blur(3px);}
+  .modal.show,.overlay.show{display:flex;}
+  .modal-card{background:var(--panel); color:var(--ink); border-radius:20px; max-width:460px; width:100%; padding:24px; box-shadow:0 20px 50px rgba(0,0,0,.35); max-height:90vh; overflow:auto;}
+  .modal-card h2{font-family:"Fredoka"; margin:0 0 12px; font-size:1.5rem;}
+  .modal-card ul{margin:0 0 18px; padding-left:18px; color:var(--ink-soft); line-height:1.65; font-size:.98rem;}
+  .modal-card ul b{color:var(--ink);}
+  .modal-card p{color:var(--ink-soft); line-height:1.5;}
+  .modal-actions{display:flex; gap:10px; margin-top:8px;}
+  .modal-actions .big{font-size:1.2rem; min-height:56px; padding:16px 0;}
+  .overlay-card{background:var(--panel); border-radius:24px; width:100%; max-width:460px; padding:40px 28px; text-align:center; box-shadow:0 20px 50px rgba(0,0,0,.4); border-top:10px solid var(--turn);}
+  .overlay-card .ho-chip{width:64px; height:64px; border-radius:50%; margin:0 auto 16px; display:flex; align-items:center; justify-content:center; color:#fff; font-family:"Fredoka"; font-weight:700; font-size:1.6rem; box-shadow:inset 0 0 0 4px rgba(255,255,255,.4);}
+  .overlay-card .ho-sub{color:var(--ink-soft); font-family:"Fredoka"; letter-spacing:1px; text-transform:uppercase; font-size:.8rem;}
+  .overlay-card .ho-name{font-family:"Fredoka"; font-size:2.1rem; font-weight:600; margin:4px 0 22px; line-height:1.1;}
+  .overlay-card .ho-hint{color:var(--ink-soft); font-size:.85rem; margin-top:14px;}
+
+  /* responsive nudges */
+  @media(min-width:860px){
+    .die{width:74px; height:74px;} .pip{width:11px; height:11px;}
+    .cell{max-height:42px;} .pmark{width:15px;height:15px;}
+    .top h1{font-size:1.9rem;}
+  }
+  @media(max-width:380px){
+    body{padding:9px;}
+    .cols{gap:3px;} .track{gap:2px;}
+    .col-head{font-size:.85rem; padding:3px 0;}
+    .die{width:52px; height:52px; border-radius:12px; padding:8px;}
+    .pip{width:7px; height:7px;}
+    .pmark{width:11px; height:11px; font-size:0;}
+    .runner-dot{width:11px; height:11px;}
+    .top h1{font-size:1.35rem;}
+    .ghost-btn{padding:9px 12px; font-size:.92rem;}
+    .icon-btn{min-width:42px; padding:9px 11px; font-size:1.1rem;}
+    .choice{font-size:1.25rem; padding:16px; min-width:98px;}
+    .big{font-size:1.35rem; min-height:60px;}
+    .status .who{font-size:1.35rem;} .status{padding:14px 15px;}
+    .turn-chip{width:26px; height:26px;}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="top">
+    <h1 class="f">Can't&nbsp;Stop<span class="dot">.</span></h1>
+    <div class="top-btns">
+      <button class="ghost-btn icon-btn" id="howBtn" aria-label="How to play" title="How to play">?</button>
+      <button class="ghost-btn icon-btn" id="themeBtn" aria-label="Theme" title="Light / dark">🌙</button>
+      <button class="ghost-btn icon-btn" id="muteBtn" aria-label="Sound" title="Sound">🔊</button>
+      <button class="ghost-btn" id="newGameBtn" style="display:none;">New Game</button>
+    </div>
+  </div>
+
+  <!-- ===================== SETUP ===================== -->
+  <div id="setup" class="card">
+    <div class="resume-wrap" id="resumeWrap" style="display:none;">
+      <button class="big" id="resumeBtn">▶ Resume saved game</button>
+      <div class="or">— or start fresh —</div>
+    </div>
+    <h2 class="f">Set up the game</h2>
+    <p class="sub">2–4 players on one shared screen. Pass the device on each turn.</p>
+    <div class="count-row" id="countRow">
+      <button data-n="2">2</button>
+      <button data-n="3">3</button>
+      <button data-n="4">4</button>
+    </div>
+    <div class="name-list" id="nameList"></div>
+    <button class="big" id="startBtn">Start Game</button>
+    <button class="big ghost2" id="demoBtn">▶ Try a quick demo turn</button>
+  </div>
+
+  <!-- ===================== GAME ===================== -->
+  <div id="game">
+    <div class="game-grid">
+      <section class="a-board">
+        <div class="board card"><div class="cols" id="cols"></div></div>
+      </section>
+      <section class="a-status">
+        <div class="status card" id="status">
+          <span class="turn-chip" id="turnChip"></span>
+          <div class="who-wrap">
+            <div class="now-label" id="nowLabel">Now playing</div>
+            <div class="who" id="whoText">—</div>
+            <div class="msg" id="msgText">—</div>
+          </div>
+          <div class="right" id="activeText"></div>
+        </div>
+      </section>
+      <section class="a-play">
+        <div class="card play-card">
+          <div class="coach" id="coach"></div>
+          <div class="dice" id="dice"></div>
+          <div id="bannerSlot"></div>
+          <div id="actionSlot"></div>
+        </div>
+      </section>
+      <section class="a-scores">
+        <div class="scores card" id="scores"></div>
+      </section>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== MODALS / OVERLAYS ===================== -->
+<div class="modal" id="modalRules">
+  <div class="modal-card">
+    <h2>How to play</h2>
+    <ul>
+      <li>On your turn, tap <b>Roll Dice</b> to roll four dice.</li>
+      <li>The dice split into <b>two pairs</b>. Each pair's total moves that numbered column up by one. Tap a highlighted <b>pairing button</b> to choose.</li>
+      <li>You may have runners in only <b>3 columns per turn</b>. Pairings needing a 4th column aren't offered.</li>
+      <li>After a move, tap <b>Roll Again</b> to push your luck, or <b>Stop</b> to bank this turn's progress.</li>
+      <li>If a roll has <b>no legal move</b>, you <b>bust</b> and lose this turn's progress.</li>
+      <li>Reach the top of a column to <b>claim</b> it (★). Claimed columns close to everyone.</li>
+      <li>First player to claim <b>3 columns wins.</b></li>
+    </ul>
+    <div class="modal-actions"><button class="big" data-close>Got it</button></div>
+  </div>
+</div>
+
+<div class="modal" id="modalConfirm">
+  <div class="modal-card">
+    <h2>Start a new game?</h2>
+    <p>Your current game will be cleared. This can't be undone.</p>
+    <div class="modal-actions">
+      <button class="big alt" id="confirmNew">Start new</button>
+      <button class="big ghost2" data-close>Cancel</button>
+    </div>
+  </div>
+</div>
+
+<div class="overlay" id="handoff">
+  <div class="overlay-card">
+    <div class="ho-chip" id="handoffChip"></div>
+    <div class="ho-sub">Pass the device to</div>
+    <div class="ho-name" id="handoffName">—</div>
+    <button class="big" id="handoffReady">I'm ready →</button>
+    <div class="ho-hint">Tap when this player is holding the phone.</div>
+  </div>
+</div>
+
+<script>
+/* ============================================================
+   CORE GAME LOGIC  (pure functions — no DOM in this section)
+   ----- UNCHANGED from the verified version -----
+   ============================================================ */
+
+// Track length = number of steps to claim each column.
+const LENGTHS = {2:3,3:5,4:7,5:9,6:11,7:13,8:11,9:9,10:7,11:5,12:3};
+const COLS = [2,3,4,5,6,7,8,9,10,11,12];
+// Colorblind-friendly palette (Okabe–Ito): orange, sky blue, bluish-green, reddish-purple.
+const PCOLORS = ['#E69F00','#56B4E9','#009E73','#CC79A7'];
+const WIN_TARGET = 3;            // claim this many columns to win
+
+let state = null;                // the single source of truth
+
+function newState(players){
+  return {
+    phase:'turnStart',           // turnStart | rolled | decide | bust | gameOver
+    players,                     // [{name,color}]
+    permanent: players.map(()=>({})),  // permanent[player][col] = step (0..len)
+    claimed:{},                  // claimed[col] = playerIndex
+    current:0,
+    temp:{},                     // this turn's runner positions: temp[col] = step
+    dice:[1,1,1,1],
+    moves:[],                    // legal move-outcomes for the current roll
+    bustReason:'',
+    winner:null,
+  };
+}
+
+// --- small helpers ---
+function posOf(s,col){ return (col in s.temp) ? s.temp[col] : (s.permanent[s.current][col]||0); }
+function isActive(s,col){ return col in s.temp; }
+function activeCount(s){ return Object.keys(s.temp).length; }
+// A column is "open" if it isn't claimed and isn't already at the top.
+function isOpen(s,col){
+  if (s.claimed[col] != null) return false;
+  return posOf(s,col) < LENGTHS[col];
+}
+
+function rollDice(){ return [0,0,0,0].map(()=>1+Math.floor(Math.random()*6)); }
+
+/* Given one pairing (a,b), return every legal move it allows.
+   Each move is an array of {col, steps}. Returns [] if the pairing is unplayable.
+   This is where the 3-runner limit and "claimed/topped columns" rules live. */
+function pairingOutcomes(s,a,b){
+  const free = 3 - activeCount(s);            // unused runner slots
+  if (a === b){                               // both pairs make the same number
+    if (!isOpen(s,a)) return [];
+    if (!isActive(s,a) && free < 1) return []; // need a new runner but none free
+    const steps = Math.min(2, LENGTHS[a]-posOf(s,a)); // advance twice (capped at top)
+    return [[{col:a, steps}]];
+  }
+  const open = [];
+  if (isOpen(s,a)) open.push(a);
+  if (isOpen(s,b)) open.push(b);
+  if (open.length === 0) return [];
+  const activeOpen = open.filter(c=>isActive(s,c));  // already have a runner here
+  const newOpen    = open.filter(c=>!isActive(s,c)); // would need a new runner
+  if (newOpen.length <= free){                       // enough slots -> play all open cols
+    return [ [...activeOpen,...newOpen].map(c=>({col:c,steps:1})) ];
+  }
+  if (free === 0){                                   // no slots -> only already-active cols
+    if (activeOpen.length === 0) return [];
+    return [ activeOpen.map(c=>({col:c,steps:1})) ];
+  }
+  // free === 1 but two new columns want in -> the player picks which one to open
+  return [
+    [...activeOpen,newOpen[0]].map(c=>({col:c,steps:1})),
+    [...activeOpen,newOpen[1]].map(c=>({col:c,steps:1})),
+  ];
+}
+
+function outcomeKey(o){ return o.map(m=>m.col+'x'+m.steps).sort().join('|'); }
+
+/* All distinct legal moves across the three possible pairings of the 4 dice. */
+function computeMoves(s){
+  const d = s.dice;
+  const pairings = [
+    [d[0]+d[1], d[2]+d[3]],
+    [d[0]+d[2], d[1]+d[3]],
+    [d[0]+d[3], d[1]+d[2]],
+  ];
+  const seen = {}, out = [];
+  for (const [a,b] of pairings){
+    for (const o of pairingOutcomes(s,a,b)){
+      const k = outcomeKey(o);
+      if (!seen[k]){ seen[k]=1; out.push(o); }
+    }
+  }
+  return out;
+}
+
+/* Apply a chosen move to the temporary (this-turn) progress. */
+function applyMove(s,outcome){
+  for (const m of outcome){
+    if (!(m.col in s.temp)) s.temp[m.col] = s.permanent[s.current][m.col]||0; // place runner
+    s.temp[m.col] = Math.min(LENGTHS[m.col], s.temp[m.col]+m.steps);          // advance
+  }
+}
+
+/* STOP: bank this turn's progress, claim any topped columns, check for a win. */
+function doStop(s){
+  const p = s.current;
+  for (const col in s.temp){
+    s.permanent[p][col] = s.temp[col];
+    if (s.permanent[p][col] >= LENGTHS[col] && s.claimed[col]==null) s.claimed[col]=p;
+  }
+  s.temp = {};
+  const claims = COLS.filter(c=>s.claimed[c]===p).length;
+  if (claims >= WIN_TARGET){ s.winner=p; s.phase='gameOver'; return; }
+  nextTurn(s);
+}
+
+/* BUST: discard this turn's progress entirely. */
+function doBust(s,reason){ s.temp={}; s.bustReason=reason; }
+
+function nextTurn(s){
+  s.current = (s.current+1) % s.players.length;
+  s.temp = {}; s.moves = []; s.phase='turnStart';
+}
+
+/* Perform a roll and decide what happens next. */
+function doRoll(s){
+  s.dice = rollDice();
+  s.moves = computeMoves(s);
+  if (s.moves.length === 0){
+    doBust(s, 'None of the three dice pairings can advance one of your open columns.');
+    s.phase = 'bust';
+  } else {
+    s.phase = 'rolled';
+  }
+}
+
+/* ---- pure analysis helpers (read-only, do not mutate state) ---- */
+// Exact bust probability for the next roll, given current runners (1296 outcomes).
+function bustChance(s){
+  const probe={temp:s.temp, permanent:s.permanent, claimed:s.claimed, current:s.current, dice:[0,0,0,0]};
+  let bust=0;
+  for(let a=1;a<=6;a++)for(let b=1;b<=6;b++)for(let c=1;c<=6;c++)for(let d=1;d<=6;d++){
+    probe.dice[0]=a; probe.dice[1]=b; probe.dice[2]=c; probe.dice[3]=d;
+    if(computeMoves(probe).length===0) bust++;
+  }
+  return Math.round(bust/1296*100);
+}
+// How many steps of this-turn progress would be lost on a bust.
+function stepsAtStake(s){
+  let n=0;
+  for(const c in s.temp){ n += s.temp[c] - (s.permanent[s.current][c]||0); }
+  return n;
+}
+
+/* ============================================================
+   SOUND ENGINE  (Web Audio API — fully synthesized, no files)
+   ----- UNCHANGED from the verified version -----
+   ============================================================ */
+const SFX = (function(){
+  let ctx=null, master=null, muted=false;
+  function ensure(){
+    if(!ctx){
+      const AC = window.AudioContext || window.webkitAudioContext;
+      if(!AC) return null;
+      ctx = new AC();
+      master = ctx.createGain();
+      master.gain.value = 0.85;
+      master.connect(ctx.destination);
+    }
+    if(ctx.state==='suspended') ctx.resume();
+    return ctx;
+  }
+  function note(freq, t, dur, type, peak){
+    const o=ctx.createOscillator(), g=ctx.createGain();
+    o.type=type; o.frequency.setValueAtTime(freq,t);
+    g.gain.setValueAtTime(0.0001,t);
+    g.gain.exponentialRampToValueAtTime(peak,t+0.012);
+    g.gain.exponentialRampToValueAtTime(0.0001,t+dur);
+    o.connect(g); g.connect(master);
+    o.start(t); o.stop(t+dur+0.03);
+  }
+  function glide(f1,f2,t,dur,type,peak){
+    const o=ctx.createOscillator(), g=ctx.createGain();
+    o.type=type; o.frequency.setValueAtTime(f1,t);
+    o.frequency.exponentialRampToValueAtTime(Math.max(20,f2),t+dur);
+    g.gain.setValueAtTime(0.0001,t);
+    g.gain.exponentialRampToValueAtTime(peak,t+0.02);
+    g.gain.exponentialRampToValueAtTime(0.0001,t+dur);
+    o.connect(g); g.connect(master);
+    o.start(t); o.stop(t+dur+0.03);
+  }
+  function noise(t,dur,peak,freq){
+    const n=Math.floor(ctx.sampleRate*dur);
+    const buf=ctx.createBuffer(1,n,ctx.sampleRate), d=buf.getChannelData(0);
+    for(let i=0;i<n;i++) d[i]=Math.random()*2-1;
+    const src=ctx.createBufferSource(); src.buffer=buf;
+    const f=ctx.createBiquadFilter(); f.type='bandpass'; f.frequency.value=freq; f.Q.value=1.1;
+    const g=ctx.createGain();
+    g.gain.setValueAtTime(0.0001,t);
+    g.gain.exponentialRampToValueAtTime(peak,t+0.005);
+    g.gain.exponentialRampToValueAtTime(0.0001,t+dur);
+    src.connect(f); f.connect(g); g.connect(master);
+    src.start(t); src.stop(t+dur+0.03);
+  }
+  function seq(notes,type){
+    const t=ctx.currentTime;
+    notes.forEach(([f,o,d,p])=> note(f,t+o,d,type,p));
+  }
+  return {
+    setMuted(m){ muted=m; },
+    isMuted(){ return muted; },
+    unlock(){ if(!muted) ensure(); },
+    roll(){ if(muted||!ensure())return; const t=ctx.currentTime;
+      for(let i=0;i<8;i++) noise(t+i*0.045+Math.random()*0.012, 0.04, 0.22, 500+Math.random()*1500); },
+    move(){ if(muted||!ensure())return; seq([[660,0,0.09,0.30],[988,0.07,0.12,0.26]],'triangle'); },
+    bust(){ if(muted||!ensure())return; const t=ctx.currentTime;
+      glide(300,80,t,0.55,'sawtooth',0.30); noise(t,0.22,0.16,170); },
+    bank(){ if(muted||!ensure())return; seq([[523.25,0,0.15,0.28],[659.25,0.08,0.15,0.28],[783.99,0.16,0.20,0.30]],'sine'); },
+    claim(){ if(muted||!ensure())return; seq([[659.25,0,0.13,0.30],[783.99,0.07,0.13,0.30],[987.77,0.14,0.14,0.30],[1318.51,0.21,0.26,0.30]],'triangle'); },
+    win(){ if(muted||!ensure())return;
+      seq([[523.25,0,0.14,0.30],[659.25,0.14,0.14,0.30],[783.99,0.28,0.16,0.30],[1046.5,0.44,0.22,0.32],[1046.5,0.70,0.5,0.30]],'triangle');
+      seq([[1318.51,0.70,0.4,0.16],[1567.98,0.78,0.4,0.16]],'sine'); }
+  };
+})();
+window.addEventListener('pointerdown', ()=>SFX.unlock(), {once:true});
+
+/* ============================================================
+   PERSISTENCE  (localStorage, fails silently if unavailable)
+   ============================================================ */
+const SAVE_KEY='cs_save', THEME_KEY='cs_theme', MUTE_KEY='cs_mute';
+function store(k,v){ try{ if(v==null) localStorage.removeItem(k); else localStorage.setItem(k,v); }catch(e){} }
+function load(k){ try{ return localStorage.getItem(k); }catch(e){ return null; } }
+function saveGame(){ if(inTutorial) return; try{ if(state && state.phase!=='gameOver') localStorage.setItem(SAVE_KEY, JSON.stringify(state)); }catch(e){} }
+function clearSave(){ store(SAVE_KEY,null); }
+function readSave(){
+  const raw=load(SAVE_KEY); if(!raw) return null;
+  try{ const s=JSON.parse(raw);
+    if(s && Array.isArray(s.players) && s.players.length>=2 && s.phase!=='gameOver') return s;
+  }catch(e){}
+  return null;
+}
+
+/* ============================================================
+   RENDERING  (reads state, writes DOM — no game logic here)
+   ============================================================ */
+const $ = id => document.getElementById(id);
+const PIPS = {1:[4],2:[0,8],3:[0,4,8],4:[0,2,6,8],5:[0,2,4,6,8],6:[0,2,3,5,6,8]};
+let playerCount = 2;
+let inTutorial = false;
+let tutorialBanked = false;
+let recentClaims = [];          // columns claimed on the latest Stop (for the pop animation)
+
+function buildSetup(){
+  $('nameList').innerHTML='';
+  for (let i=0;i<playerCount;i++){
+    const row=document.createElement('div'); row.className='name-item';
+    row.innerHTML=`<span class="swatch" style="background:${PCOLORS[i]}">${i+1}</span>
+      <input id="name${i}" maxlength="14" placeholder="Player ${i+1} name">`;
+    $('nameList').appendChild(row);
+  }
+}
+
+/* ---------- dice ---------- */
+function setDieFaces(dieEl,val){
+  dieEl.querySelectorAll('.pip').forEach((p,i)=> p.classList.toggle('on', PIPS[val].includes(i)));
+}
+function animateDiceFaces(){
+  const dice=[...document.querySelectorAll('#dice .die')];
+  if(!dice.length) return;
+  dice.forEach((d,i)=>{ d.classList.remove('roll'); void d.offsetWidth; d.style.animationDelay=(i*0.05)+'s'; d.classList.add('roll'); });
+  let frame=0; const frames=7;
+  const iv=setInterval(()=>{
+    frame++;
+    dice.forEach(d=> setDieFaces(d, 1+Math.floor(Math.random()*6)));
+    if(frame>=frames){ clearInterval(iv); dice.forEach((d,i)=> setDieFaces(d, state.dice[i])); }
+  },55);
+}
+function performRoll(){
+  SFX.unlock();
+  doRoll(state);            // logic untouched
+  render();
+  SFX.roll();
+  animateDiceFaces();
+  if(state.phase==='bust') setTimeout(()=>SFX.bust(), 470);
+}
+
+/* ---------- highlights ---------- */
+function unionLegalCols(){
+  const s=new Set();
+  state.moves.forEach(o=> o.forEach(m=> s.add(m.col)));
+  return [...s];
+}
+function setColHighlights(previewCols){
+  const union = (state && state.phase==='rolled') ? unionLegalCols() : [];
+  document.querySelectorAll('#cols .col').forEach(el=>{
+    const c=+el.dataset.col;
+    el.classList.toggle('legal', union.includes(c));
+    el.classList.toggle('preview', !!previewCols && previewCols.includes(c));
+  });
+}
+
+function render(){
+  if (!state) return;
+  const p = state.players[state.current];
+  document.documentElement.style.setProperty('--turn', p ? p.color : 'var(--accent)');
+
+  // handoff overlay (between turns, multiplayer only)
+  const ho=$('handoff');
+  if (state.handoff && !inTutorial && state.players.length>1){
+    $('handoffName').textContent = p.name;
+    $('handoffChip').style.background = p.color;
+    $('handoffChip').textContent = state.current+1;
+    ho.classList.add('show');
+  } else ho.classList.remove('show');
+
+  // status
+  $('turnChip').style.background = p.color;
+  $('turnChip').textContent = state.current+1;
+  $('nowLabel').textContent = state.phase==='gameOver' ? 'Winner' : 'Now playing';
+  const claims = COLS.filter(c=>state.claimed[c]===state.current).length;
+  $('activeText').innerHTML = state.phase==='gameOver' ? '' : `claimed<b>${claims} / ${WIN_TARGET}</b>`;
+  const messages = {
+    turnStart:`${p.name}'s turn — tap Roll Dice.`,
+    rolled:`Choose a pairing to move.`,
+    decide:`Stop to keep your progress, or Roll Again.`,
+    bust:`Busted! This turn's progress is gone.`,
+    gameOver:`Game over.`
+  };
+  $('whoText').textContent = state.phase==='gameOver' ? `${state.players[state.winner].name} wins!` : `${p.name}'s turn`;
+  $('msgText').textContent = messages[state.phase]||'';
+
+  renderScores();
+  renderBoard();
+  renderDice();
+  renderCoach();
+  renderBannerAndActions();
+  setColHighlights(null);
+
+  if (state.phase==='gameOver') clearSave(); else saveGame();
+}
+
+function renderScores(){
+  const el=$('scores'); el.innerHTML='';
+  state.players.forEach((pl,i)=>{
+    const c = COLS.filter(col=>state.claimed[col]===i).length;
+    const d=document.createElement('div'); d.className='score';
+    d.innerHTML=`<span class="sw" style="background:${pl.color}">${i+1}</span><span>${pl.name}</span> <b>${c}</b>`;
+    if (i===state.current && state.phase!=='gameOver') d.style.boxShadow=`0 0 0 2px ${pl.color}`;
+    el.appendChild(d);
+  });
+}
+
+function renderBoard(){
+  const wrap=$('cols'); wrap.innerHTML='';
+  COLS.forEach(col=>{
+    const len=LENGTHS[col];
+    const claimedBy=state.claimed[col];
+    const colEl=document.createElement('div');
+    colEl.className='col'+(claimedBy!=null?' claimed':'')+(recentClaims.includes(col)?' just-claimed':'');
+    colEl.dataset.col=col;
+    const head=document.createElement('div'); head.className='col-head';
+    head.innerHTML = claimedBy!=null ? `${col} <span class="hstar">★</span>` : `${col}`;
+    if (claimedBy!=null) head.style.background=state.players[claimedBy].color;
+    colEl.appendChild(head);
+
+    const track=document.createElement('div'); track.className='track';
+    for (let step=1; step<=len; step++){
+      const cell=document.createElement('div');
+      cell.className='cell'+(step===len?' top':'');
+      // permanent markers (with player number for colorblind clarity)
+      state.players.forEach((pl,pi)=>{
+        if ((state.permanent[pi][col]||0)===step && claimedBy==null){
+          const m=document.createElement('span'); m.className='pmark';
+          m.style.background=pl.color; m.textContent=pi+1; cell.appendChild(m);
+        }
+      });
+      // current player's temporary runner
+      if (state.temp[col]===step){
+        const ring=document.createElement('span'); ring.className='runner';
+        ring.style.color=state.players[state.current].color; cell.appendChild(ring);
+        const rd=document.createElement('span'); rd.className='runner-dot';
+        rd.style.background=state.players[state.current].color; cell.appendChild(rd);
+      }
+      if (claimedBy!=null && step===len){
+        const b=document.createElement('span'); b.className='claim-badge';
+        b.innerHTML=`<span class="cstar">★</span><span class="cnum">P${claimedBy+1}</span>`;
+        cell.appendChild(b);
+      }
+      track.appendChild(cell);
+    }
+    colEl.appendChild(track);
+    wrap.appendChild(colEl);
+  });
+}
+
+function renderDice(){
+  const el=$('dice'); el.innerHTML='';
+  const used = (state.phase==='decide');
+  state.dice.forEach(v=>{
+    const die=document.createElement('div');
+    die.className='die'+(used?' used':'')+(state.phase==='rolled'?' roll':'');
+    for (let i=0;i<9;i++){
+      const pip=document.createElement('span');
+      pip.className='pip'+(PIPS[v].includes(i)?' on':'');
+      die.appendChild(pip);
+    }
+    el.appendChild(die);
+  });
+  el.style.visibility = (state.phase==='turnStart')?'hidden':'visible';
+}
+
+function coachText(){
+  if (state.phase==='turnStart')
+    return tutorialBanked
+      ? `Banked! Your colored dots are now <b>safe</b>. Reach the top of 3 columns to win. You've got it — tap <b>End demo</b> to play for real.`
+      : `👋 Welcome! Tap <b>🎲 Roll Dice</b> to roll four dice.`;
+  if (state.phase==='rolled')
+    return `Each button is a <b>pairing</b>. The glowing columns show where you'd climb. Tap one to move.`;
+  if (state.phase==='decide')
+    return `Those dashed rings are <b>this turn's progress</b>. Tap <b>Stop</b> to bank it, or <b>Roll Again</b> to risk it for more.`;
+  if (state.phase==='bust')
+    return `💥 Bust! A roll with <b>no legal move</b> wipes this turn's progress. Tap <b>Continue</b>.`;
+  return '';
+}
+function renderCoach(){
+  const el=$('coach');
+  if(!inTutorial){ el.style.display='none'; return; }
+  el.style.display='block';
+  el.innerHTML=`<div class="coach-txt">${coachText()}</div>`;
+  const end=document.createElement('button'); end.className='coach-end'; end.textContent='End demo';
+  end.onclick=endTutorial; el.appendChild(end);
+}
+
+function moveLabel(o){
+  if (o.length===1 && o[0].steps===2) return o[0].col+' <small>twice</small>';
+  return o.map(m=>m.col).join(' + ');
+}
+
+function renderBannerAndActions(){
+  const banner=$('bannerSlot'), action=$('actionSlot');
+  banner.innerHTML=''; action.innerHTML='';
+  const color = state.players[state.current] ? state.players[state.current].color : 'var(--accent)';
+
+  if (state.phase==='gameOver'){
+    banner.innerHTML=`<div class="banner win">🏆 ${state.players[state.winner].name} claimed ${WIN_TARGET} columns!
+      <small>Tap New Game to play again.</small></div>`;
+    const b=document.createElement('button'); b.className='big'; b.textContent='New Game';
+    b.onclick=()=>{ clearSave(); inTutorial=false; state=null; showSetup(); };
+    action.appendChild(b);
+    return;
+  }
+
+  if (state.phase==='turnStart'){
+    const b=document.createElement('button'); b.className='big'; b.textContent='🎲 Roll Dice';
+    b.onclick=performRoll;
+    action.appendChild(b);
+    return;
+  }
+
+  if (state.phase==='rolled'){
+    const prompt=document.createElement('div'); prompt.className='prompt';
+    prompt.textContent='Choose a pairing:'; action.appendChild(prompt);
+    const choices=document.createElement('div'); choices.className='choices';
+    state.moves.forEach(o=>{
+      const btn=document.createElement('button'); btn.className='choice';
+      btn.style.background=color; btn.innerHTML=`▲ ${moveLabel(o)}`;
+      const cols=o.map(m=>m.col);
+      btn.addEventListener('pointerenter',()=>setColHighlights(cols));
+      btn.addEventListener('pointerdown',()=>setColHighlights(cols));
+      btn.addEventListener('pointerleave',()=>setColHighlights(null));
+      btn.onclick=()=>{ applyMove(state,o); SFX.move(); state.phase='decide'; render(); };
+      choices.appendChild(btn);
+    });
+    action.appendChild(choices);
+    return;
+  }
+
+  if (state.phase==='decide'){
+    const wrap=document.createElement('div'); wrap.className='controls';
+    const risk=document.createElement('div'); risk.className='risk';
+    const ch=bustChance(state), st=stepsAtStake(state);
+    risk.innerHTML=`⚠ Roll again: <b>${ch}%</b> bust risk · <b>${st}</b> step${st===1?'':'s'} at stake`;
+    wrap.appendChild(risk);
+    const row=document.createElement('div'); row.className='row';
+    const stop=document.createElement('button'); stop.className='big'; stop.textContent='✋ Stop';
+    stop.onclick=onStop;
+    const again=document.createElement('button'); again.className='big alt'; again.textContent='🎲 Roll Again';
+    again.onclick=performRoll;
+    row.appendChild(stop); row.appendChild(again);
+    wrap.appendChild(row);
+    action.appendChild(wrap);
+    return;
+  }
+
+  if (state.phase==='bust'){
+    banner.innerHTML=`<div class="banner bust">💥 Busted!<small>${state.bustReason}</small></div>`;
+    const b=document.createElement('button'); b.className='big alt';
+    b.textContent = (inTutorial||state.players.length<2) ? 'Continue' : 'Continue →';
+    b.onclick=()=>{ nextTurn(state); if(!inTutorial && state.players.length>1) state.handoff=true; render(); };
+    action.appendChild(b);
+    return;
+  }
+}
+
+function onStop(){
+  const before = COLS.filter(c=>state.claimed[c]!=null);
+  doStop(state);                       // logic untouched (advances turn / sets winner)
+  const gained = COLS.filter(c=>state.claimed[c]!=null && !before.includes(c));
+  recentClaims = gained;
+  if (state.phase==='gameOver'){
+    if (gained.length) SFX.claim();
+    setTimeout(()=>SFX.win(), gained.length?320:0);
+  } else {
+    if (gained.length) SFX.claim(); else SFX.bank();
+    if (inTutorial) tutorialBanked=true;
+    else if (state.players.length>1) state.handoff=true;
+  }
+  render();
+  if (gained.length) setTimeout(()=>{ recentClaims=[]; }, 1400);
+}
+
+/* ============================================================
+   SCREENS / WIRING
+   ============================================================ */
+function showSetup(){
+  $('game').style.display='none';
+  $('setup').style.display='block';
+  $('newGameBtn').style.display='none';
+  $('resumeWrap').style.display = readSave() ? 'block' : 'none';
+  buildSetup();
+}
+function showGame(){
+  $('setup').style.display='none';
+  $('game').style.display='block';
+  $('newGameBtn').style.display='inline-block';
+}
+
+function startGame(){
+  const players=[];
+  for (let i=0;i<playerCount;i++){
+    const v=($('name'+i).value||'').trim();
+    players.push({ name: v || `Player ${i+1}`, color: PCOLORS[i] });
+  }
+  inTutorial=false; tutorialBanked=false; recentClaims=[];
+  state=newState(players);
+  clearSave();
+  showGame(); render();
+}
+function resumeGame(){
+  const s=readSave(); if(!s) return;
+  inTutorial=false; recentClaims=[];
+  state=s;
+  showGame(); render();
+}
+function startTutorial(){
+  inTutorial=true; tutorialBanked=false; recentClaims=[];
+  state=newState([{ name:'You', color:PCOLORS[0] }]);
+  showGame(); render();
+}
+function endTutorial(){
+  inTutorial=false; state=null;
+  showSetup();
+}
+
+/* modals */
+function openModal(id){ $(id).classList.add('show'); }
+function closeModal(el){ el.classList.remove('show'); }
+document.querySelectorAll('.modal').forEach(m=>{
+  m.addEventListener('click', e=>{ if(e.target===m || e.target.hasAttribute('data-close')) closeModal(m); });
+});
+
+/* theme */
+function applyTheme(t){
+  document.documentElement.dataset.theme=t;
+  $('themeBtn').textContent = (t==='dark') ? '☀️' : '🌙';
+  store(THEME_KEY,t);
+}
+
+/* setup controls */
+$('countRow').addEventListener('click',e=>{
+  const b=e.target.closest('button[data-n]'); if(!b) return;
+  playerCount=+b.dataset.n;
+  [...$('countRow').children].forEach(c=>c.classList.toggle('sel', c===b));
+  buildSetup();
+});
+$('startBtn').onclick=startGame;
+$('demoBtn').onclick=startTutorial;
+$('resumeBtn').onclick=resumeGame;
+$('handoffReady').onclick=()=>{ state.handoff=false; SFX.unlock(); render(); };
+
+/* header controls */
+$('howBtn').onclick=()=>openModal('modalRules');
+$('themeBtn').onclick=()=>applyTheme(document.documentElement.dataset.theme==='dark'?'light':'dark');
+$('muteBtn').onclick=()=>{
+  const m=!SFX.isMuted(); SFX.setMuted(m); if(!m) SFX.unlock();
+  $('muteBtn').textContent = m?'🔇':'🔊'; $('muteBtn').classList.toggle('muted', m);
+  store(MUTE_KEY, m?'1':'0');
+};
+$('newGameBtn').onclick=()=>{
+  if(state && !inTutorial && state.phase!=='gameOver') openModal('modalConfirm');
+  else { clearSave(); inTutorial=false; state=null; showSetup(); }
+};
+$('confirmNew').onclick=()=>{
+  closeModal($('modalConfirm')); clearSave(); inTutorial=false; state=null; showSetup();
+};
+
+/* ---------- init ---------- */
+(function init(){
+  // theme: stored preference, else follow the OS
+  const savedTheme = load(THEME_KEY) || ((window.matchMedia && matchMedia('(prefers-color-scheme: dark)').matches) ? 'dark':'light');
+  applyTheme(savedTheme);
+  // mute
+  if(load(MUTE_KEY)==='1'){ SFX.setMuted(true); $('muteBtn').textContent='🔇'; $('muteBtn').classList.add('muted'); }
+  // setup screen
+  $('countRow').children[0].classList.add('sel');
+  showSetup();
+})();
+</script>
+</body>
+</html>
