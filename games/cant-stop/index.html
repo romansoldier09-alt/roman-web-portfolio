@@ -1042,9 +1042,6 @@ function endTutorial(){
 /* modals */
 function openModal(id){ $(id).classList.add('show'); }
 function closeModal(el){ el.classList.remove('show'); }
-document.querySelectorAll('.modal').forEach(m=>{
-  m.addEventListener('click', e=>{ if(e.target===m || e.target.hasAttribute('data-close')) closeModal(m); });
-});
 
 /* theme */
 function applyTheme(t){
@@ -1235,21 +1232,6 @@ $('volumeSlider').addEventListener('input', (e) => {
   $('volumeValue').textContent = e.target.value + '%';
 });
 
-// Haptic toggle
-$('hapticToggle').addEventListener('click', function(){
-  hapticEnabled = !hapticEnabled;
-  this.classList.toggle('on', hapticEnabled);
-  store(HAPTIC_KEY, hapticEnabled ? '1' : '0');
-  if(hapticEnabled) vibrate([50, 30, 50]);
-});
-
-// Confetti toggle
-$('confettiToggle').addEventListener('click', function(){
-  confettiEnabled = !confettiEnabled;
-  this.classList.toggle('on', confettiEnabled);
-  store(CONFETTI_KEY, confettiEnabled ? '1' : '0');
-});
-
 // Service worker registration (for offline support)
 if('serviceWorker' in navigator){
   window.addEventListener('load', () => {
@@ -1285,6 +1267,33 @@ if('serviceWorker' in navigator){
   // setup screen
   $('countRow').children[0].classList.add('sel');
   showSetup();
+  
+  // Initialize modal event listeners (after DOM is ready)
+  document.querySelectorAll('.modal').forEach(m=>{
+    m.addEventListener('click', e=>{
+      if(e.target===m || e.target.hasAttribute('data-close')) closeModal(m);
+    });
+  });
+  
+  // Initialize toggle event listeners
+  if($('hapticToggle')){
+    $('hapticToggle').addEventListener('click', function(e){
+      e.stopPropagation();
+      hapticEnabled = !hapticEnabled;
+      this.classList.toggle('on', hapticEnabled);
+      store(HAPTIC_KEY, hapticEnabled ? '1' : '0');
+      if(hapticEnabled) vibrate([50, 30, 50]);
+    });
+  }
+  
+  if($('confettiToggle')){
+    $('confettiToggle').addEventListener('click', function(e){
+      e.stopPropagation();
+      confettiEnabled = !confettiEnabled;
+      this.classList.toggle('on', confettiEnabled);
+      store(CONFETTI_KEY, confettiEnabled ? '1' : '0');
+    });
+  }
 })();
 </script>
 
