@@ -397,97 +397,87 @@
 
 <section id="contact">
   <p class="contact-pre" data-en="Let's talk about your project" data-es="Hablemos de tu proyecto">Let's talk about your project</p>
-  <h2 class="contact-h"><span data-en="Get a free website demo" data-es="Obtén una demo gratis">Get a free website demo</span></h2>
-  <p class="contact-sub" data-en="Fill out the form below and we’ll get back to you within 24–48 hours." data-es="Llena el formulario y te responderemos dentro de 24–48 horas.">Fill out the form below and we’ll get back to you within 24–48 hours.</p>
+  <h2 class="contact-h"><span data-en="What are you looking to build?" data-es="¿Qué estás buscando crear?">What are you looking to build?</span></h2>
+  <p class="contact-sub" data-en="Fill out the form below and I’ll review your project details." data-es="Llena el formulario y revisaré los detalles de tu proyecto.">Fill out the form below and I’ll review your project details.</p>
   
-  <form id="lead-form" class="lead-form" name="website-lead-form" action="https://formsubmit.co/roman.j.lopez09@gmail.com" method="POST" enctype="multipart/form-data" accept-charset="UTF-8">
-    <!-- FormSubmit settings. Keep these fields in this form so desktop and mobile submissions behave the same. -->
-    <input type="hidden" name="_subject" value="New Website Lead from Roman Built Web Studio">
-    <input type="hidden" name="_captcha" value="false">
-    <input type="hidden" name="_template" value="table">
-    <input type="hidden" name="_next" value="https://romanbuiltwebstudio.com/thank-you.html">
-    <input type="hidden" name="_autoresponse" value="Thanks for reaching out to Roman Built Web Studio. We received your website project details and will review them shortly. We usually respond within 24–48 hours. If you need to send photos, logos, or extra details, you can reply directly to this email or send them to roman.j.lopez09@gmail.com.">
-    
-    <div class="form-row">
-      <div class="form-group">
-        <label for="name" data-en="Your Name *" data-es="Tu Nombre *">Your Name *</label>
-        <input type="text" id="name" name="name" required data-en-placeholder="John Smith" data-es-placeholder="Juan Pérez">
-      </div>
-      <div class="form-group">
-        <label for="email" data-en="Email *" data-es="Correo *">Email *</label>
-        <input type="email" id="email" name="email" required data-en-placeholder="john@business.com" data-es-placeholder="juan@negocio.com">
-      </div>
-    </div>
-    
-    <div class="form-row">
-      <div class="form-group">
-        <label for="phone" data-en="Phone" data-es="Teléfono">Phone</label>
-        <input type="tel" id="phone" name="phone" data-en-placeholder="(555) 123-4567" data-es-placeholder="(555) 123-4567">
-      </div>
-      <div class="form-group">
-        <label for="business" data-en="Business Name *" data-es="Nombre del Negocio *">Business Name *</label>
-        <input type="text" id="business" name="business" required data-en-placeholder="Your Business Name" data-es-placeholder="Nombre de tu negocio">
-      </div>
-    </div>
-    
+  <form id="lead-form" class="lead-form" name="website-lead-form" action="https://api.web3forms.com/submit" method="POST" accept-charset="UTF-8">
+    <!-- Web3Forms settings. Native POST keeps the form reliable across desktop and mobile browsers. -->
+    <input type="hidden" name="access_key" value="fb5dc0cd-63ba-451c-9bc4-551944e10f70">
+    <input type="hidden" name="subject" value="New Roman Built Website Inquiry">
+    <input type="hidden" name="redirect" value="https://romanbuiltwebstudio.com/thank-you.html">
+    <input type="checkbox" name="botcheck" tabindex="-1" autocomplete="off" style="display:none">
+
     <div class="form-group">
-      <label for="project-type" data-en="Type of Project *" data-es="Tipo de Proyecto *">Type of Project *</label>
-      <select id="project-type" name="project-type" required>
-        <option value="" data-en="Select a project type..." data-es="Selecciona un tipo de proyecto...">Select a project type...</option>
-        <option value="new-website" data-en="New business website" data-es="Sitio web nuevo para negocio">New business website</option>
-        <option value="redesign" data-en="Website redesign" data-es="Rediseño de sitio web">Website redesign</option>
-        <option value="landing" data-en="Landing page" data-es="Página de aterrizaje">Landing page</option>
-        <option value="bilingual" data-en="Bilingual website" data-es="Sitio web bilingüe">Bilingual website</option>
-        <option value="portfolio" data-en="Portfolio website" data-es="Portafolio">Portfolio website</option>
-        <option value="product" data-en="Product website" data-es="Sitio para producto">Product website</option>
-        <option value="not-sure" data-en="Other / not sure yet" data-es="Otro / todavía no estoy seguro">Other / not sure yet</option>
+      <label for="name" data-en="Name *" data-es="Nombre *">Name *</label>
+      <input type="text" id="name" name="name" required autocomplete="name" data-en-placeholder="Your name" data-es-placeholder="Tu nombre">
+    </div>
+
+    <div class="form-group">
+      <label for="email" data-en="Email *" data-es="Correo *">Email *</label>
+      <input type="email" id="email" name="email" required autocomplete="email" data-en-placeholder="you@business.com" data-es-placeholder="tu@negocio.com">
+    </div>
+
+    <div class="form-group">
+      <label for="phone" data-en="Phone number" data-es="Número de teléfono">Phone number</label>
+      <input type="tel" id="phone" name="phone" autocomplete="tel" data-en-placeholder="(555) 123-4567" data-es-placeholder="(555) 123-4567">
+      <p class="form-helper" data-en="Include your phone number if you prefer text or a call." data-es="Incluye tu número de teléfono si prefieres que te escriba o te llame.">Include your phone number if you prefer text or a call.</p>
+    </div>
+
+    <div class="form-group">
+      <fieldset class="contact-preference">
+        <legend data-en="How would you prefer I reach you?" data-es="¿Cómo prefieres que me comunique contigo?">How would you prefer I reach you?</legend>
+        <div class="contact-preference-options">
+          <label class="contact-preference-option">
+            <input type="radio" name="contact_preference" value="Email">
+            <span data-en="Email" data-es="Correo">Email</span>
+          </label>
+          <label class="contact-preference-option">
+            <input type="radio" name="contact_preference" value="Text">
+            <span data-en="Text" data-es="Mensaje de texto">Text</span>
+          </label>
+          <label class="contact-preference-option">
+            <input type="radio" name="contact_preference" value="Phone call">
+            <span data-en="Phone call" data-es="Llamada">Phone call</span>
+          </label>
+          <label class="contact-preference-option">
+            <input type="radio" name="contact_preference" value="No preference">
+            <span data-en="No preference" data-es="Sin preferencia">No preference</span>
+          </label>
+        </div>
+      </fieldset>
+    </div>
+
+    <div class="form-group">
+      <label for="business" data-en="Business name *" data-es="Nombre del negocio *">Business name *</label>
+      <input type="text" id="business" name="business_name" required autocomplete="organization" data-en-placeholder="Your business name" data-es-placeholder="Nombre de tu negocio">
+    </div>
+
+    <div class="form-group">
+      <label for="website-social" data-en="Website or social link" data-es="Sitio web o red social">Website or social link</label>
+      <input type="text" id="website-social" name="website_or_social" inputmode="url" autocomplete="url" data-en-placeholder="Website, Facebook, Instagram, etc." data-es-placeholder="Sitio web, Facebook, Instagram, etc.">
+    </div>
+
+    <div class="form-group">
+      <label for="project-type" data-en="What can I help with? *" data-es="¿En qué puedo ayudarte? *">What can I help with? *</label>
+      <select id="project-type" name="project_type" required>
+        <option value="" data-en="Select an option..." data-es="Selecciona una opción...">Select an option...</option>
+        <option value="new-website" data-en="New website" data-es="Sitio web nuevo">New website</option>
+        <option value="website-redesign-upgrade" data-en="Website redesign / upgrade" data-es="Rediseño / mejora de sitio web">Website redesign / upgrade</option>
+        <option value="bilingual-website" data-en="Bilingual website" data-es="Sitio web bilingüe">Bilingual website</option>
+        <option value="website-online-business-setup" data-en="Website + online business setup" data-es="Sitio web + configuración del negocio en línea">Website + online business setup</option>
+        <option value="landing-page" data-en="Landing page" data-es="Página de destino">Landing page</option>
+        <option value="branding-website-identity" data-en="Branding / website identity" data-es="Marca / identidad del sitio web">Branding / website identity</option>
+        <option value="not-sure" data-en="Not sure yet" data-es="Todavía no estoy seguro">Not sure yet</option>
+        <option value="something-else" data-en="Something else" data-es="Algo más">Something else</option>
       </select>
     </div>
-    
-    <div class="form-row">
-      <div class="form-group">
-        <label for="current-website" data-en="Current website URL (optional)" data-es="Sitio web actual (opcional)">Current website URL (optional)</label>
-        <input type="text" id="current-website" name="current_website_url" inputmode="url" autocomplete="url" data-en-placeholder="Example: yourbusiness.com" data-es-placeholder="Ejemplo: tunegocio.com">
-      </div>
-      <div class="form-group">
-        <label for="social-url" data-en="Social media URL (optional)" data-es="Red social (opcional)">Social media URL (optional)</label>
-        <input type="text" id="social-url" name="social_media_url" inputmode="url" data-en-placeholder="Facebook, Instagram, TikTok, etc." data-es-placeholder="Facebook, Instagram, TikTok, etc.">
-      </div>
-    </div>
 
     <div class="form-group">
-      <label for="preferred-domain" data-en="Preferred website URL / domain idea (optional)" data-es="URL o dominio preferido (opcional)">Preferred website URL / domain idea (optional)</label>
-      <input type="text" id="preferred-domain" name="preferred_website_url_or_domain" inputmode="url" data-en-placeholder="Example: yourbusiness.com or a domain idea you like" data-es-placeholder="Ejemplo: tunegocio.com o una idea de dominio">
+      <label for="message" data-en="Tell me a little about your business and what you’re looking for *" data-es="Cuéntame un poco sobre tu negocio y lo que estás buscando *">Tell me a little about your business and what you’re looking for *</label>
+      <textarea id="message" name="message" rows="6" required data-en-placeholder="Tell me what your business does and what you want to build or improve..." data-es-placeholder="Cuéntame qué hace tu negocio y qué quieres crear o mejorar..."></textarea>
     </div>
 
-    <div class="form-group">
-      <label for="project-files" data-en="Upload project files (optional)" data-es="Subir archivos del proyecto (opcional)">Upload project files (optional)</label>
-      <label class="file-upload-area" for="project-files">
-        <span class="file-upload-icon">↑</span>
-        <span class="file-upload-title" data-en="Click or drag files here" data-es="Haz clic o arrastra archivos aquí">Click or drag files here</span>
-        <span class="file-upload-copy" data-en="Upload photos, logos, brand images, website screenshots, or other project files." data-es="Sube fotos, logos, imágenes de marca, capturas del sitio web u otros archivos del proyecto.">Upload photos, logos, brand images, website screenshots, or other project files.</span>
-        <span class="file-upload-selected" aria-live="polite"></span>
-      </label>
-      <input class="file-upload-input" type="file" id="project-files" name="attachment" multiple accept="image/*,.pdf,.doc,.docx,.txt,.zip">
-    </div>
-
-    <div class="form-group">
-      <label for="contact-time" data-en="Best time to reach out" data-es="Mejor horario para contactarte">Best time to reach out</label>
-      <select id="contact-time" name="best_time_to_reach_out">
-        <option value="" data-en="Select a time..." data-es="Selecciona un horario...">Select a time...</option>
-        <option value="morning" data-en="Morning" data-es="Mañana">Morning</option>
-        <option value="afternoon" data-en="Afternoon" data-es="Tarde">Afternoon</option>
-        <option value="evening" data-en="Evening" data-es="Noche">Evening</option>
-        <option value="anytime" data-en="Anytime" data-es="Cualquier hora">Anytime</option>
-      </select>
-    </div>
-    
-    <div class="form-group">
-      <label for="message" data-en="Project Details *" data-es="Detalles del Proyecto *">Project Details *</label>
-      <textarea id="message" name="message" rows="4" required data-en-placeholder="Tell me about your business, services, and what you need..." data-es-placeholder="Cuéntame sobre tu negocio, servicios y qué necesitas..."></textarea>
-    </div>
-    
-    <button type="submit" class="btn btn-primary form-submit" data-en="Send Project Info" data-es="Enviar Información">Send Project Info</button>
+    <button type="submit" class="btn btn-primary form-submit" data-en="Start the Conversation" data-es="Iniciar la conversación">Start the Conversation</button>
   </form>
   
   <div class="form-success" style="display:none;">
