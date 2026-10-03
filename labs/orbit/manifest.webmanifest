@@ -1,0 +1,24 @@
+{
+  "id": "/labs/orbit/",
+  "name": "ORBIT 1989",
+  "short_name": "ORBIT 1989",
+  "start_url": "/labs/orbit/play/",
+  "scope": "/labs/orbit/",
+  "display": "standalone",
+  "theme_color": "#07041a",
+  "background_color": "#07041a",
+  "icons": [
+    {
+      "src": "/labs/orbit/icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/labs/orbit/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ]
+}
